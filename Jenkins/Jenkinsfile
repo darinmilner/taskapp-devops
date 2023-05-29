@@ -1,0 +1,54 @@
+def commonLib = readTrusted("pipeline/common.groovy")
+
+pipeline {
+    agent: any
+
+    environment {
+       String API_UPLOAD_BUCKET = "api-bucket"
+       String API_BUCKET_KEY = "api"
+    }
+
+    parameters {
+       string(name: "APP_FOLDER", defaultValue: "terraform", description: "Folder where pipeline actions should run")
+       string(name: "AWS_AMI", description: "EC2 AMI for deploying Terraform resources")
+       choice(name: "PIPELINE_ACTION",  choices: ["test","lambdas","deploy-api","init and plan","apply","destroy"], description: "Pipeline deploy action")
+       string(name: "DB_HOST", description: "DB Host for RDS instance")
+       password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
+       password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
+       choice(name: "CLOUD_ENVIRONMENT", choices: ["dev","test", "prod"], description: "Deployment cloud environment")
+       choice(name: "BACKEND_BUCKET", choices: ["taskapi-bucket-useast1","taskapi-bucket-useast2"], description: "Backend bucket for storing Terraform State File")
+       choice(name: "AWS_REGION", choices: ["us-east-1","us-east-2","us-west-1"], description: "AWS Region to deploy resources and app")
+    }
+
+    stages {
+        stage("Set Variables") {
+            steps {
+                script {
+                     pipelineAction = params.PIPELINE_ACTION
+                     backendBucket = params.BACKEND_BUCKET
+                     appFolder = params.APP_FOLDER
+                     awsRegion = params.AWS_REGION
+                     awsAMI = params.AWS_AMI
+                     cloudEnv = params.CLOUD_ENVIRONMENT
+                     dbHost = params.DB_HOST
+                     echo "dbHost $dbHost"
+                     echo "backendBucket $backendBucket"
+                }
+            }
+        }
+
+        stage("Build API Environment") {
+            when {
+                expression {
+                    return pipelineAction == "deploy-api"
+                }
+            }
+
+            steps {
+                script {
+                    commonLib.buildKotlinEnvironment()
+                }
+            }
+        }
+    }
+}
