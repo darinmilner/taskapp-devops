@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  jenkins:
+    build:
+      context: .
+    user: root
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    container_name: jenkins
+    volumes:
+      - /jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock

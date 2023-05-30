@@ -1,4 +1,5 @@
 def commonLib = readTrusted("pipeline/common.groovy")
+def terraformLib = readTrusted("pipeline/terraform.groovy")
 
 pipeline {
     agent: any
@@ -33,6 +34,20 @@ pipeline {
                      dbHost = params.DB_HOST
                      echo "dbHost $dbHost"
                      echo "backendBucket $backendBucket"
+                }
+            }
+        }
+
+        stage("Build Terraform Environment") {
+            when {
+                expression {
+                    return pipelineAction != "test"
+                }
+            }
+
+            steps {
+                script {
+                    terraformLib.terraformInit(backendBucket, awsRegion)
                 }
             }
         }

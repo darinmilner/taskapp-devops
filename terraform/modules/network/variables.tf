@@ -29,6 +29,14 @@ variable "ssh-port" {
   type = string
 }
 
+variable "http-port" {
+  type = string
+}
+
+variable "https-port" {
+  type = string
+}
+
 variable "all-protocols" {
   type = string
 }

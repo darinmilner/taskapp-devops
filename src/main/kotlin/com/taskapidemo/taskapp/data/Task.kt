@@ -25,7 +25,7 @@ class Task {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    val priority: Priority = Priority.LOW
+    var priority: Priority = Priority.LOW
 
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
