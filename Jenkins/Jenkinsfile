@@ -45,6 +45,7 @@ pipeline {
                     secretKey = params.AWS_SECRET_KEY
                     echo "dbHost $dbHost"
                     echo "backendBucket $backendBucket"
+                    echo "aws region $awsRegion"
                 }
             }
         }

@@ -8,6 +8,7 @@ def buildTerraformEnvironment() {
             && curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS \\
             && curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import \\
             && curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS...
+            terraform --version
         """
     } catch (err) {
         returnError(err)
