@@ -12,6 +12,8 @@ module "network" {
   tcp-protocol  = local.tcp-protocol
   http-port     = local.http-port
   https-port    = local.https-port
+  zone1         = local.zone1
+  open-cidr     = local.open_cidr
 }
 
 module "server" {

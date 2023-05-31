@@ -44,3 +44,11 @@ variable "all-protocols" {
 variable "tcp-protocol" {
   type = string
 }
+
+variable "open-cidr" {
+  type = string
+}
+
+variable "zone1" {
+  type = string
+}

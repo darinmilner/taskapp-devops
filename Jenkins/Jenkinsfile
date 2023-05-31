@@ -1,39 +1,51 @@
 def commonLib = readTrusted("pipeline/common.groovy")
 def terraformLib = readTrusted("pipeline/terraform.groovy")
+def accessKey
+def secretKey
+def appFolder
+def backendBucket
+def awsRegion
+def pipelineAction
+def stateTable
 
 pipeline {
-    agent: any
+    agent:
+    any
 
     environment {
-       String API_UPLOAD_BUCKET = "api-bucket"
-       String API_BUCKET_KEY = "api"
+        String API_UPLOAD_BUCKET = "api-bucket"
+        String API_BUCKET_KEY = "api"
     }
 
     parameters {
-       string(name: "APP_FOLDER", defaultValue: "terraform", description: "Folder where pipeline actions should run")
-       string(name: "AWS_AMI", description: "EC2 AMI for deploying Terraform resources")
-       choice(name: "PIPELINE_ACTION",  choices: ["test","lambdas","deploy-api","init and plan","apply","destroy"], description: "Pipeline deploy action")
-       string(name: "DB_HOST", description: "DB Host for RDS instance")
-       password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
-       password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
-       choice(name: "CLOUD_ENVIRONMENT", choices: ["dev","test", "prod"], description: "Deployment cloud environment")
-       choice(name: "BACKEND_BUCKET", choices: ["taskapi-bucket-useast1","taskapi-bucket-useast2"], description: "Backend bucket for storing Terraform State File")
-       choice(name: "AWS_REGION", choices: ["us-east-1","us-east-2","us-west-1"], description: "AWS Region to deploy resources and app")
+        choice(name: "APP_FOLDER", choices: ["terraform", "lambdas", "secret-manager", "src"], description: "Folder where pipeline actions should run")
+        string(name: "AWS_AMI", description: "EC2 AMI for deploying Terraform resources")
+        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "init and plan", "apply", "destroy"], description: "Pipeline deploy action")
+        string(name: "DB_HOST", description: "DB Host for RDS instance")
+        password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
+        password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
+        choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
+        choice(name: "BACKEND_BUCKET", choices: ["taskapi-storage-bucket-useast1", "taskapi-storage-bucket-useast2"], description: "Backend bucket for storing Terraform State File")
+        choice(name: "BACKEND_TABLE", choices: ["state-lock-table-useast1", "state-lock-table-useast2"], description: "TF state lock DynamoDB table")
+        choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1"], description: "AWS Region to deploy resources and app")
     }
 
     stages {
         stage("Set Variables") {
             steps {
                 script {
-                     pipelineAction = params.PIPELINE_ACTION
-                     backendBucket = params.BACKEND_BUCKET
-                     appFolder = params.APP_FOLDER
-                     awsRegion = params.AWS_REGION
-                     awsAMI = params.AWS_AMI
-                     cloudEnv = params.CLOUD_ENVIRONMENT
-                     dbHost = params.DB_HOST
-                     echo "dbHost $dbHost"
-                     echo "backendBucket $backendBucket"
+                    pipelineAction = params.PIPELINE_ACTION
+                    backendBucket = params.BACKEND_BUCKET
+                    appFolder = params.APP_FOLDER
+                    awsRegion = params.AWS_REGION
+                    awsAMI = params.AWS_AMI
+                    cloudEnv = params.CLOUD_ENVIRONMENT
+                    dbHost = params.DB_HOST
+                    stateTable = params.STATE_TABLE
+                    accessKey = params.AWS_ACCESS_KEY
+                    secretKey = params.AWS_SECRET_KEY
+                    echo "dbHost $dbHost"
+                    echo "backendBucket $backendBucket"
                 }
             }
         }
@@ -41,13 +53,27 @@ pipeline {
         stage("Build Terraform Environment") {
             when {
                 expression {
-                    return pipelineAction != "test"
+                    return pipelineAction != "test" || pipelineAction != "deploy-api"
                 }
             }
 
             steps {
                 script {
-                    terraformLib.terraformInit(backendBucket, awsRegion)
+                    terraformLib.buildTerraformEnvironment()
+                }
+            }
+        }
+
+        stage("Init and Plan") {
+            when {
+                expression {
+                    return pipelineAction != "test" || pipelineAction != "deploy-api"
+                }
+            }
+
+            steps {
+                script {
+                    terraformLib.terraformInit(backendBucket, appFolder, awsRegion, stateTable, accessKey, secretKey)
                 }
             }
         }
