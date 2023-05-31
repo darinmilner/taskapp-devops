@@ -14,6 +14,7 @@ pipeline {
     environment {
         String API_UPLOAD_BUCKET = "api-bucket"
         String API_BUCKET_KEY = "api"
+        String TERRAFORM_VERSION = "1.4.6"
     }
 
     parameters {
@@ -24,7 +25,6 @@ pipeline {
         password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
         password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
-        choice(name: "BACKEND_BUCKET", choices: ["taskapi-storage-bucket-useast1", "taskapi-storage-bucket-useast2"], description: "Backend bucket for storing Terraform State File")
         choice(name: "BACKEND_TABLE", choices: ["state-lock-table-useast1", "state-lock-table-useast2"], description: "TF state lock DynamoDB table")
         choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1"], description: "AWS Region to deploy resources and app")
     }
@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     pipelineAction = params.PIPELINE_ACTION
-                    backendBucket = params.BACKEND_BUCKET
+                    backendBucket = commonLib.getBucketName()
                     appFolder = params.APP_FOLDER
                     awsRegion = params.AWS_REGION
                     awsAMI = params.AWS_AMI

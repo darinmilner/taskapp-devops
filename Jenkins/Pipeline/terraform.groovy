@@ -1,14 +1,14 @@
 def buildTerraformEnvironment() {
-    def TERRAFORM_VERSION = "1.4.6"
     echo "Installing Terraform"
 
     try {
         sh """
-            curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \\
-            && curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS \\
+            curl -Os https://releases.hashicorp.com/terraform/${env.TERRAFORM_VERSION}/terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip \\
+            && curl -Os https://releases.hashicorp.com/terraform/${env.TERRAFORM_VERSION}/terraform_${env.TERRAFORM_VERSION}_SHA256SUMS \\
             && curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import \\
-            && curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS...
-            mv terraform /usr/local/bin/
+            && curl -Os https://releases.hashicorp.com/terraform/${env.TERRAFORM_VERSION}/terraform_${env.TERRAFORM_VERSION}_SHA256SUMS...
+            export PATH=/usr/local/bin:$PATH
+            export PATH=$PATH:/usr/local/terraform
             terraform --version
         """
     } catch (err) {
@@ -37,7 +37,7 @@ def terraformInit(backendBucket, appFolder, awsRegion, stateTable, accessKey, se
             -backend-config="secret_key=${secretKey}" \\
             -backend-config="dynamodb_table=${stateTable}"
         """
-    } catch (Exception err) {
+    } catch (err) {
         returnError(err)
         throw err
     }

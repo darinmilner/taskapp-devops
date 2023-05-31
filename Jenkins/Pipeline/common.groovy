@@ -1,3 +1,17 @@
+def getBucketName(awsRegion) {
+    String bucketName = null
+    switch (awsRegion) {
+        case "us-west-1":
+            bucketName == "taskapp-bucket-uswest1"
+            return bucketName
+        case "us-east-1":
+            bucketName == "taskapp-bucket-useast1"
+            return bucketName
+        default:
+            throw new Exception("Invalid or unsupported region $awsRegion")
+    }
+}
+
 def buildLambdaEnvironment() {
     echo "Building Lambda Environment"
 }
