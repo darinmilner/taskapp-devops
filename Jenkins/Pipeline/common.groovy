@@ -26,27 +26,13 @@ def getDynamoDBStateTableName(awsRegion) {
     }
 }
 
-def buildLambdaEnvironment() {
-    echo "Building Lambda Environment"
-}
-
 def installAWSCLI() {
     echo "Installing AWS CLI"
     sh """
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         unzip awscliv2.zip
-        ./aws/install
-        aws --version
-    """
-}
-
-def buildPythonEnvironment() {
-    echo "Installing Python environment"
-    sh """
-        apt update
-        apt install python3-pip -y
-        python3 --version
-        pip3 install -r requirements.txt
+        ./aws/install -y
+        which aws
     """
 }
 

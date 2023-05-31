@@ -1,5 +1,6 @@
 def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
 def terraformLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
+def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
 def accessKey
 def secretKey
 def appFolder
@@ -19,7 +20,7 @@ pipeline {
 
     parameters {
         choice(name: "APP_FOLDER", choices: ["terraform", "lambdas", "secret-manager", "src"], description: "Folder where pipeline actions should run")
-        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "init and plan", "apply", "destroy"], description: "Pipeline deploy action")
+        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "build-and-deploy-api" , "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
         password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
         password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
@@ -94,7 +95,7 @@ pipeline {
         stage("Build API Environment") {
             when {
                 expression {
-                    return pipelineAction == "deploy-api"
+                    return pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
                 }
             }
 
