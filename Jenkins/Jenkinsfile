@@ -9,8 +9,7 @@ def pipelineAction
 def stateTable
 
 pipeline {
-    agent:
-    any
+    agent any
 
     environment {
         String API_UPLOAD_BUCKET = "api-bucket"
