@@ -82,7 +82,7 @@ pipeline {
 
             steps {
                 script {
-                    terraformLib.terraformInit(backendBucket, appFolder, awsRegion, stateTable, accessKey, secretKey)
+                    terraformLib.terraformInit(backendBucket, appFolder, awsRegion, cloudEnv, stateTable, accessKey, secretKey)
                 }
             }
         }

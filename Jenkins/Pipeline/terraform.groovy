@@ -18,7 +18,7 @@ def buildTerraformEnvironment() {
 
 }
 
-def terraformInit(backendBucket, appFolder, awsRegion, stateTable, accessKey, secretKey) {
+def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, accessKey, secretKey) {
     if (appFolder == "secret-manager") {
         appFolder = "terraform/secret-manager"
     } else if (appFolder == "lambdas") {
@@ -31,7 +31,7 @@ def terraformInit(backendBucket, appFolder, awsRegion, stateTable, accessKey, se
         sh """
             cd ${appFolder}
             terraform init -backend-config="bucket=${backendBucket}" \\
-            -backend-config="key=${appFolder}/terraform.tfstate" \\
+            -backend-config="key=${appFolder}/${cloudEnv}/terraform.tfstate" \\
             -backend-config="region=${awsRegion}" \\
             -backend-config="access_key=${accessKey}" \\
             -backend-config="secret_key=${secretKey}" \\

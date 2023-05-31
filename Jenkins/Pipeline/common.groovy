@@ -1,11 +1,11 @@
 def getBucketName(awsRegion) {
-    String bucketName = null
+    String bucketName
     switch (awsRegion) {
         case "us-west-1":
-            bucketName == "taskapp-bucket-uswest1"
+            bucketName = "taskapp-bucket-uswest1"
             return bucketName
         case "us-east-1":
-            bucketName == "taskapp-bucket-useast1"
+            bucketName = "taskapp-bucket-useast1"
             return bucketName
         default:
             throw new Exception("Invalid or unsupported region $awsRegion")
