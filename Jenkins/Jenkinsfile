@@ -50,6 +50,14 @@ pipeline {
             }
         }
 
+        stage("Update Node") {
+            steps {
+                scripts {
+                    sh "apt-get update"
+                }
+            }
+        }
+
         stage("Build Terraform Environment") {
             when {
                 expression {

@@ -8,6 +8,7 @@ def buildTerraformEnvironment() {
             && curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS \\
             && curl https://keybase.io/hashicorp/pgp_keys.asc | gpg --import \\
             && curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS...
+            mv terraform /usr/local/bin/
             terraform --version
         """
     } catch (err) {
@@ -45,7 +46,6 @@ def terraformInit(backendBucket, appFolder, awsRegion, stateTable, accessKey, se
 def returnError(err) {
     echo "Terraform init failed $err"
     echo err.getMessage()
-    echo err.getStackTrace()
 }
 
 return this
