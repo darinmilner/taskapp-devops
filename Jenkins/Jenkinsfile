@@ -52,7 +52,7 @@ pipeline {
 
         stage("Update Node") {
             steps {
-                scripts {
+                script {
                     sh "apt-get update"
                 }
             }
