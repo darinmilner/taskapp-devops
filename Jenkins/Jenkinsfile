@@ -1,5 +1,5 @@
-def commonLib = evaluate readTrusted("pipeline/common.groovy")
-def terraformLib = evaluate readTrusted("pipeline/terraform.groovy")
+def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
+def terraformLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
 def accessKey
 def secretKey
 def appFolder
