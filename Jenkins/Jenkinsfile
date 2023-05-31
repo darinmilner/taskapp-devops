@@ -24,7 +24,7 @@ pipeline {
         password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
         password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
-        choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1"], description: "AWS Region to deploy resources and app")
+        choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1", "ap-southeast-3"], description: "AWS Region to deploy resources and app")
     }
 
     stages {
