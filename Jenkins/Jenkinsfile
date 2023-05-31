@@ -40,6 +40,7 @@ pipeline {
 
                     backendBucket = commonLib.getBucketName(awsRegion)
                     stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
+
                     echo "App Folder: $appFolder"
                     echo "Backend State and storage bucket: $backendBucket"
                     echo "DynamoDB state table Name: $stateTable"
