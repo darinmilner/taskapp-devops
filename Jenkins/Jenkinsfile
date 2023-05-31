@@ -34,15 +34,16 @@ pipeline {
             steps {
                 script {
                     pipelineAction = params.PIPELINE_ACTION
-                    backendBucket = commonLib.getBucketName(awsRegion)
-                    appFolder = params.APP_FOLDER
                     awsRegion = params.AWS_REGION
+                    appFolder = params.APP_FOLDER
                     awsAMI = params.AWS_AMI
                     cloudEnv = params.CLOUD_ENVIRONMENT
                     dbHost = params.DB_HOST
                     stateTable = params.STATE_TABLE
                     accessKey = params.AWS_ACCESS_KEY
                     secretKey = params.AWS_SECRET_KEY
+
+                    backendBucket = commonLib.getBucketName(awsRegion)
                     echo "dbHost $dbHost"
                     echo "backendBucket $backendBucket"
                     echo "aws region $awsRegion"
