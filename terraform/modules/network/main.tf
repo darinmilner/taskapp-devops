@@ -14,6 +14,13 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_vpc_endpoint" "s3-endpoint" {
-  service_name = "com.amazonaws.${var.aws-region}.s3"
-  vpc_id       = aws_vpc.main.id
+  service_name    = "com.amazonaws.${var.aws-region}.s3"
+  route_table_ids = [aws_route_table.public-route.id]  //TODO: attach to private route
+  vpc_id          = aws_vpc.main.id
+}
+
+resource "aws_vpc_endpoint" "dynamodb-endpoint" {
+  service_name    = "com.amazonaws.${var.aws-region}.dynamodb"
+  route_table_ids = [aws_route_table.public-route.id]  //TODO: attach to private route
+  vpc_id          = aws_vpc.main.id
 }
