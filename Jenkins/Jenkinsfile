@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     pipelineAction = params.PIPELINE_ACTION
-                    backendBucket = commonLib.getBucketName()
+                    backendBucket = commonLib.getBucketName(awsRegion)
                     appFolder = params.APP_FOLDER
                     awsRegion = params.AWS_REGION
                     awsAMI = params.AWS_AMI
