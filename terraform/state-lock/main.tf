@@ -12,8 +12,14 @@ resource "aws_s3_bucket" "storage-bucket" {
 
 resource "aws_s3_bucket_acl" "bucket-acl" {
   bucket = aws_s3_bucket.storage-bucket.bucket
+  acl    = "private"
 }
 
 resource "aws_dynamodb_table" "state-lock-table" {
-  name = "state-lock-table-${local.short_region}"
+  name         = "state-lock-table-${local.short_region}"
+  billing_mode = "PAY_PER_REQUEST"
+  attribute {
+    name = "LockId"
+    type = "S"
+  }
 }

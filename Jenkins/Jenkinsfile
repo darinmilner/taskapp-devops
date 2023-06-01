@@ -19,8 +19,8 @@ pipeline {
     }
 
     parameters {
-        choice(name: "APP_FOLDER", choices: ["terraform", "lambdas", "database", "src"], description: "Folder where pipeline actions should run")
-        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "build-and-deploy-api" , "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
+        choice(name: "APP_FOLDER", choices: ["core-resources", "lambdas", "database", "api"], description: "Folder where pipeline actions should run")
+        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
         password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
         password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")

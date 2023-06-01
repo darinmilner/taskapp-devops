@@ -1,5 +1,7 @@
 FROM jenkins/jenkins:lts-jdk11
 
+ARG TERRAFORM_VERSION=1.4.6
+
 USER root
 
 RUN apt-get update && apt-get install -y lsb-release

@@ -28,7 +28,8 @@ resource "aws_vpc_endpoint" "s3-endpoint" {
 }
 
 resource "aws_vpc_endpoint" "dynamodb-endpoint" {
-  service_name    = "com.amazonaws.${var.aws-region}.dynamodb"
-  route_table_ids = [aws_route_table.private-route.id]
-  vpc_id          = aws_vpc.main.id
+  service_name       = "com.amazonaws.${var.aws-region}.dynamodb"
+  route_table_ids    = [aws_route_table.private-route.id]
+  security_group_ids = []
+  vpc_id             = aws_vpc.main.id
 }

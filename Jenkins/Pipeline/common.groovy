@@ -46,4 +46,25 @@ def buildKotlinEnvironment() {
     """
 }
 
+def getAppFolder(pipelineAction) {
+    def appFolder
+    switch (pipelineAction) {
+        case "lambdas" || "test-lambdas":
+            appFolder = "terraform/lambdas"
+            return appFolder
+        case "database":
+            appFolder = "terraform/database"
+            return appFolder
+        case "deploy-api" || "test-api":
+            appFolder = "src"
+            return appFolder
+        case "core-resources":
+            appFolder = "terraform"
+            return appFolder
+        default:
+            throw new Exception("Invalid or unsupported pipeline action $pipelineAction")
+    }
+}
+
+
 return this
