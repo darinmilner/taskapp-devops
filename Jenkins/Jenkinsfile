@@ -1,3 +1,5 @@
+#!groovy
+
 def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
 def terraformLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
 def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
@@ -57,12 +59,9 @@ pipeline {
                         apt-get install wget
                     """
                     try {
-                        sh """
-                         which aws
-                         terraform --version
-                        """
+                        commonLib.installAWSCLI()
                     } catch (err) {
-                        echo "$err  install terraform and aws cli"
+                        echo "$err  installing aws cli"
                     }
                 }
             }
@@ -109,6 +108,19 @@ pipeline {
                     commonLib.buildKotlinEnvironment()
                 }
             }
+        }
+    }
+
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: true,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    //                  notFailBuild: true,
+//                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+//                               [pattern: '.propsfile', type: 'EXCLUDE']]
+            )
         }
     }
 }
