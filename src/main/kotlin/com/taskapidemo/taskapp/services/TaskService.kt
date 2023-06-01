@@ -70,19 +70,25 @@ class TaskService(
 
     fun updateTask(id: Long, request: TaskUpdateRequest): TaskDto {
         findTaskById(id)
-        val exisitingTask: Task = repository.findTaskById(id)
+        val existingTask: Task = repository.findTaskById(id)
 
         for (prop in TaskUpdateRequest::class.memberProperties) {
             if (prop.get(request) != null) {
                 val field: Field? = ReflectionUtils.findField(Task::class.java, prop.name)
                 field?.let {
                     it.isAccessible = true
-                    ReflectionUtils.setField(it, exisitingTask, prop.get(request))
+                    ReflectionUtils.setField(it, existingTask, prop.get(request))
                 }
             }
         }
 
-        val updatedTask: Task = repository.save(exisitingTask)
+        val updatedTask: Task = repository.save(existingTask)
         return mappingEntityToDto(updatedTask)
+    }
+
+    fun deleteTask(id: Long): String {
+        findTaskById(id)
+        repository.deleteById(id)
+        return "Task with id $id successfully deleted."
     }
 }

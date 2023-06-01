@@ -4,7 +4,7 @@ def buildTerraformEnvironment() {
     try {
         sh """            
             # Download terraform for linux
-            wget --progress=dot:mega https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+            wget --progress=dot:mega https://releases.hashicorp.com/terraform/${env.TERRAFORM_VERSION}/terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip
             # Unzip
             unzip terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip 
             # Move to local bin
