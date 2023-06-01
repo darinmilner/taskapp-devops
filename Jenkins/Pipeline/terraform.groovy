@@ -6,7 +6,7 @@ def buildTerraformEnvironment() {
             # Download terraform for linux
             wget --progress=dot:mega https://releases.hashicorp.com/terraform/${env.TERRAFORM_VERSION}/terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip
             # Unzip
-            unzip terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip 
+            unzip -o terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip 
             # Move to local bin
             mv terraform /usr/local/bin/ 
             # Make it executable
@@ -50,6 +50,8 @@ def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, acc
         appFolder = "terraform/database"
     } else if (appFolder == "lambdas") {
         appFolder = "terraform/lambdas"
+    } else if (appFolder == "core-resources") {
+        appFolder = "terraform"
     }
 
     echo "Initializing Terraform in folder $appFolder"

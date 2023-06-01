@@ -56,6 +56,14 @@ pipeline {
                         apt-get update
                         apt-get install wget
                     """
+                    try {
+                        sh """
+                         which aws
+                         terraform --version
+                        """
+                    } catch (err) {
+                        echo "$err  install terraform and aws cli"
+                    }
                 }
             }
         }
