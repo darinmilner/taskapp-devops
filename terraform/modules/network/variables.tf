@@ -52,3 +52,7 @@ variable "open-cidr" {
 variable "zone1" {
   type = string
 }
+
+variable "zone2" {
+  type = string
+}

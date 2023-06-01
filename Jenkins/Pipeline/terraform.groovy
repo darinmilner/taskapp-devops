@@ -19,8 +19,8 @@ def buildTerraformEnvironment() {
 }
 
 def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, accessKey, secretKey) {
-    if (appFolder == "secret-manager") {
-        appFolder = "terraform/secret-manager"
+    if (appFolder == "database") {
+        appFolder = "terraform/database"
     } else if (appFolder == "lambdas") {
         appFolder = "terraform/lambdas"
     }
@@ -41,6 +41,20 @@ def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, acc
         returnError(err)
         throw err
     }
+}
+
+def planTerraform(backendBucket, appFolder, cloudEnv, awsRegion) {
+    if (appFolder == "database") {
+        appFolder = "terraform/database"
+    } else if (appFolder == "lambdas") {
+        appFolder = "terraform/lambdas"
+    }
+
+    echo "Running terraform plan in folder $appFolder"
+
+    sh """
+        echo "terraform plan"
+    """
 }
 
 def returnError(err) {

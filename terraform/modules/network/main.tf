@@ -13,14 +13,22 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 }
 
+resource "aws_subnet" "private" {
+  vpc_id = aws_vpc.main.id
+
+  cidr_block              = var.cidr-block
+  availability_zone       = var.zone2
+  map_public_ip_on_launch = true
+}
+
 resource "aws_vpc_endpoint" "s3-endpoint" {
   service_name    = "com.amazonaws.${var.aws-region}.s3"
-  route_table_ids = [aws_route_table.public-route.id]  //TODO: attach to private route
+  route_table_ids = [aws_route_table.private-route.id]
   vpc_id          = aws_vpc.main.id
 }
 
 resource "aws_vpc_endpoint" "dynamodb-endpoint" {
   service_name    = "com.amazonaws.${var.aws-region}.dynamodb"
-  route_table_ids = [aws_route_table.public-route.id]  //TODO: attach to private route
+  route_table_ids = [aws_route_table.private-route.id]
   vpc_id          = aws_vpc.main.id
 }

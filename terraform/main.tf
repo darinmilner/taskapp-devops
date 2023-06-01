@@ -13,6 +13,7 @@ module "network" {
   http-port     = local.http-port
   https-port    = local.https-port
   zone1         = local.zone1
+  zone2         = local.zone2
   open-cidr     = local.open_cidr
 }
 
@@ -21,4 +22,7 @@ module "server" {
   aws-region = var.aws-region
   server-sg  = module.network.server-sg
   zone1      = local.zone1
+  zone2      = local.zone2
+  env        = var.system-environment
+  project    = var.project
 }

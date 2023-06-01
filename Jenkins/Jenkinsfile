@@ -1,6 +1,6 @@
 def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
 def terraformLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
-def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
+def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
 def accessKey
 def secretKey
 def appFolder
@@ -19,7 +19,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: "APP_FOLDER", choices: ["terraform", "lambdas", "secret-manager", "src"], description: "Folder where pipeline actions should run")
+        choice(name: "APP_FOLDER", choices: ["terraform", "lambdas", "database", "src"], description: "Folder where pipeline actions should run")
         choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "build-and-deploy-api" , "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
         password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
         password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
@@ -57,15 +57,6 @@ pipeline {
             }
         }
 
-        stage("Install AWS CLI") {
-            steps {
-                script {
-                    sh "which aws"
-                    commonLib.installAWSCLI()
-                }
-            }
-        }
-
         stage("Build Terraform Environment") {
             when {
                 expression {
@@ -90,6 +81,7 @@ pipeline {
             steps {
                 script {
                     terraformLib.terraformInit(backendBucket, appFolder, awsRegion, cloudEnv, stateTable, accessKey, secretKey)
+                    terraformLib.planTerraform(backendBucket, appFolder, awsRegion, cloudEnv)
                 }
             }
         }

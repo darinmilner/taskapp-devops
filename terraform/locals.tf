@@ -11,7 +11,9 @@ locals {
   all-protocols = "-1"
   open_cidr     = "0.0.0.0/0"
 
-  common_tags = {
-    "Project-Name" : "Task API"
+  common-tags = {
+    Env       = var.system-environment
+    ManagedBy = "terraform"
+    Project   = var.project
   }
 }

@@ -6,6 +6,10 @@ variable "zone1" {
   type = string
 }
 
+variable "zone2" {
+  type = string
+}
+
 variable "amis" {
   type    = map
   default = {
@@ -18,3 +22,10 @@ variable "server-sg" {
   type = string
 }
 
+variable "project" {
+  type = string
+}
+
+variable "env" {
+  type = string
+}
