@@ -3,6 +3,7 @@
 def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
 def terraformLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
 def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
+def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
 def accessKey
 def secretKey
 def appFolder
@@ -61,10 +62,21 @@ pipeline {
                         apt-get install wget
                     """
                     try {
-                        commonLib.installAWSCLI()
+                        sh """
+                            which aws
+                            terraform --version
+                        """
                     } catch (err) {
-                        echo "$err installing aws cli"
+                        echo "$err installing aws cli or Terraform in Docker"
                     }
+                }
+            }
+        }
+
+        stage("Run API Tests") {
+            steps {
+                script {
+                    buildAPILib.runAPITests()
                 }
             }
         }
@@ -117,13 +129,7 @@ pipeline {
         // Clean after build
         always {
             echo "Cleaning workspace"
-            cleanWs(cleanWhenNotBuilt: true,
-                    deleteDirs: true,
-                    disableDeferredWipeout: true,
-                    //                  notFailBuild: true,
-//                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-//                               [pattern: '.propsfile', type: 'EXCLUDE']]
-            )
+            cleanWs()
         }
     }
 }

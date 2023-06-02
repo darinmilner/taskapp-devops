@@ -18,18 +18,6 @@ def getBucketName(awsRegion) {
     }
 }
 
-def installAWSCLI() {
-    echo "Installing AWS CLI"
-    sh """
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-       # unzip awscliv2.zip
-        unzip -f awscliv2.zip
-        ./aws/install 
-        which aws
-        aws --version
-    """
-}
-
 def getDynamoDBStateTableName(awsRegion) {
     String tableName
     switch (awsRegion) {
@@ -48,14 +36,6 @@ def getDynamoDBStateTableName(awsRegion) {
         default:
             throw new Exception("Invalid or unsupported region $awsRegion")
     }
-}
-
-def buildKotlinEnvironment() {
-    echo "Building Kotlin"
-    sh """
-    java --version
-    
-    """
 }
 
 def getAppFolder(pipelineAction) {
@@ -78,5 +58,19 @@ def getAppFolder(pipelineAction) {
     }
 }
 
+def configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey) {
+    echo "Configuring AWS Profile"
+
+    try {
+        sh """
+            aws configure set aws_access_key_id ${awsAccessKey} --profile Default
+            aws configure set aws_secret_access_key ${awsSecretKey} --profile Default
+            aws configure set region ${awsRegion} --profile Default
+            aws configure set output "json" --profile Default
+        """
+    } catch (err) {
+        echo "Error configuring AWS Profile"
+    }
+}
 
 return this
