@@ -59,12 +59,11 @@ pipeline {
                 script {
                     sh """
                         apt-get update
-                        apt-get install wget
                     """
                     try {
                         sh """
-                            which aws
                             terraform --version
+                            aws --version
                         """
                     } catch (err) {
                         echo "$err installing aws cli or Terraform in Docker"
@@ -81,16 +80,16 @@ pipeline {
             }
         }
 
-        stage("Build Terraform Environment") {
+        stage("Configure AWS Environment") {
             when {
                 expression {
-                    return pipelineAction != "test" || pipelineAction != "deploy-api"
+                    return pipelineAction != "test"
                 }
             }
 
             steps {
                 script {
-                    terraformLib.buildTerraformEnvironment()
+                    commonLib.configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey)
                 }
             }
         }
