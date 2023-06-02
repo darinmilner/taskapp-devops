@@ -6,7 +6,7 @@ def buildTerraformEnvironment() {
             # Download terraform for linux
             wget --progress=dot:mega https://releases.hashicorp.com/terraform/${env.TERRAFORM_VERSION}/terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip
             # Unzip
-            unzip -o terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip 
+            unzip -f terraform_${env.TERRAFORM_VERSION}_linux_amd64.zip 
             # Move to local bin
             mv terraform /usr/local/bin/ 
             # Make it executable
@@ -89,6 +89,9 @@ def planTerraform(backendBucket, appFolder, cloudEnv, awsRegion) {
 def returnError(err) {
     echo "Terraform init failed $err"
     echo err.getMessage()
+
+    echo "Cleaning workspace"
+    cleanWs()
 }
 
 return this

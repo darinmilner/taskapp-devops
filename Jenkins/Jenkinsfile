@@ -10,6 +10,7 @@ def backendBucket
 def awsRegion
 def pipelineAction
 def stateTable
+def cloudEnv
 
 pipeline {
     agent any
@@ -47,6 +48,7 @@ pipeline {
                     echo "Backend State and storage bucket: $backendBucket"
                     echo "DynamoDB state table Name: $stateTable"
                     echo "Current AWS Region: $awsRegion"
+                    echo "Cloud Environment $cloudEnv"
                 }
             }
         }
@@ -61,7 +63,7 @@ pipeline {
                     try {
                         commonLib.installAWSCLI()
                     } catch (err) {
-                        echo "$err  installing aws cli"
+                        echo "$err installing aws cli"
                     }
                 }
             }
@@ -114,6 +116,7 @@ pipeline {
     post {
         // Clean after build
         always {
+            echo "Cleaning workspace"
             cleanWs(cleanWhenNotBuilt: true,
                     deleteDirs: true,
                     disableDeferredWipeout: true,
