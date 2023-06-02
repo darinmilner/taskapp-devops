@@ -89,7 +89,7 @@ pipeline {
 
             steps {
                 script {
-                    commonLib.configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey)
+                    commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
                 }
             }
         }
