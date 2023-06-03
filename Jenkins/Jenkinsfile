@@ -12,7 +12,13 @@ pipeline {
      }
 
     stages{
-        masterLib.runPipeline()
+        stage("Run Pipeline"){
+            steps {
+                script {
+                     masterLib.runPipeline()
+                }
+            }
+        }
     }
 
     post {
