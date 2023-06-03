@@ -120,3 +120,4 @@ def runPipeline() {
     }
 }
 
+return this
