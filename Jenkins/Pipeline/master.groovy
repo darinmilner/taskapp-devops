@@ -4,7 +4,7 @@ def runPipeline() {
     def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
     def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
     def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
-    def loggerLib = evaluate readTrusted("Jenkins/Pipeline/loggr.groovy")
+    def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
     def accessKey
     def secretKey
     def appFolder
@@ -42,9 +42,9 @@ def runPipeline() {
                 echo "Current AWS Region: $awsRegion"
                 echo "Cloud Environment $cloudEnv"
 
+                loggerLib.echoBanner("Pipeline running logger banner test.")
                 def log = load "logging.groovy"
-                log.logInfo("Pipeline running")
-                loggerLib.echoBanner("Pipeline running.")
+                log.logInfo("Pipeline running Java Logger test")
             }
         }
     }
