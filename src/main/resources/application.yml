@@ -1,0 +1,14 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+  application:
+    name: Task-API
+    description: Simple Task API
+spring:
+  profiles:
+    active: local

@@ -2,7 +2,6 @@ def buildKotlinEnvironment() {
     echo "Building Kotlin"
     sh """
     java --version
-    
     """
 }
 

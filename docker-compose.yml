@@ -1,35 +1,38 @@
+version: "3.9"
+
 services:
   db:
     container_name: postgres
-    image: postgres:14.1
+    image: postgres:alpine
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: changeme
-      PGDATA: /data/postgres
-    volumes:
-      - db:/data/postgres
+      POSTGRES_DB: taskapi
+    #      PGDATA: /data/postgres
+    #    volumes:
+    #      - db:/data/postgres
     ports:
       - "5432:5432"
-    networks:
-      - db
+    #    networks:
+    #      - db
     restart: unless-stopped
-  task-api:
-    container_name: task-api
-    image: task-api
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/customer
-    ports:
-      - "8088:8080"
-    networks:
-      - db
-    depends_on:
-      - db
-    restart: unless-stopped
-
-
-networks:
-  db:
-    driver: bridge
-
-volumes:
-  db:
+#  task-api:
+#    container_name: task-api
+#    image: task-api
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/customer
+#    ports:
+#      - "8088:8080"
+#    networks:
+#      - db
+#    depends_on:
+#      - db
+#    restart: unless-stopped
+#
+#
+#networks:
+#  db:
+#    driver: bridge
+#
+#volumes:
+#  db:

@@ -19,22 +19,22 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 ################################
 # Install AWS CLI
 ################################
-
-RUN apt-get install -y python3-pip
-
-RUN pip3 install --upgrade pip
-RUN python3 -V
-RUN pip --version
-
-RUN pip install awscli --upgrade --user
-
-# add aws cli location to path
-ENV PATH=~/.local/bin:$PATH
-
-# Adds local templates directory and contents in /usr/local/terrafrom-templates
-#ADD templates /usr/local/bin/templates
-
-RUN mkdir ~/.aws && touch ~/.aws/credentials
+#
+#RUN apt-get install -y python3-pip
+#
+#RUN pip3 install --upgrade pip
+#RUN python3 -V
+#RUN pip --version
+#
+#RUN pip install awscli --upgrade --user
+#
+## add aws cli location to path
+#ENV PATH=~/.local/bin:$PATH
+#
+## Adds local templates directory and contents in /usr/local/terrafrom-templates
+##ADD templates /usr/local/bin/templates
+#
+#RUN mkdir ~/.aws && touch ~/.aws/credentials
 
 ################################
 # Install Terraform
@@ -47,14 +47,14 @@ RUN \
 
 # Download terraform for linux
 RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-
 # Unzip
 RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-
 # Move to local bin
 RUN mv terraform /usr/local/bin/
 # Check that it's installed
 RUN terraform --version
+
+RUN rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 USER jenkins
 

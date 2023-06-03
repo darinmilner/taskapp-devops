@@ -1,4 +1,4 @@
-package com.taskapidemo.taskapp.comntrollers
+package com.taskapidemo.taskapp.controllers
 
 import com.taskapidemo.taskapp.models.TaskCreateRequest
 import com.taskapidemo.taskapp.models.TaskDto

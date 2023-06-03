@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    username: postgres
+    password: changeme
+    url: jdbc:postgresql://localhost:5432/taskapi
+
+  sql:
+    init:
+      mode: always
