@@ -23,98 +23,100 @@ def runPipeline() {
         choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1", "ap-southeast-3"], description: "AWS Region to deploy resources and app")
     }
 
-    stage("Set Variables") {
-        steps {
-            script {
-                pipelineAction = params.PIPELINE_ACTION
-                awsRegion = params.AWS_REGION
-                appFolder = params.APP_FOLDER
-                cloudEnv = params.CLOUD_ENVIRONMENT
-                accessKey = params.AWS_ACCESS_KEY
-                secretKey = params.AWS_SECRET_KEY
+    stages {
+        stage("Set Variables") {
+            steps {
+                script {
+                    pipelineAction = params.PIPELINE_ACTION
+                    awsRegion = params.AWS_REGION
+                    appFolder = params.APP_FOLDER
+                    cloudEnv = params.CLOUD_ENVIRONMENT
+                    accessKey = params.AWS_ACCESS_KEY
+                    secretKey = params.AWS_SECRET_KEY
 
-                backendBucket = commonLib.getBucketName(awsRegion)
-                stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
+                    backendBucket = commonLib.getBucketName(awsRegion)
+                    stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
 
-                echo "App Folder: $appFolder"
-                echo "Backend State and storage bucket: $backendBucket"
-                echo "DynamoDB state table Name: $stateTable"
-                echo "Current AWS Region: $awsRegion"
-                echo "Cloud Environment $cloudEnv"
+                    echo "App Folder: $appFolder"
+                    echo "Backend State and storage bucket: $backendBucket"
+                    echo "DynamoDB state table Name: $stateTable"
+                    echo "Current AWS Region: $awsRegion"
+                    echo "Cloud Environment $cloudEnv"
 
-                loggerLib.echoBanner("Pipeline running logger banner test.")
-                def log = load "logging.groovy"
-                log.logInfo("Pipeline running Java Logger test")
-            }
-        }
-    }
-
-    stage("Update Node") {
-        steps {
-            script {
-                sh """
-                      apt-get update
-                   """
-                try {
-                    sh """
-                         terraform --version
-                         aws --version
-                       """
-                } catch (err) {
-                    echo "$err installing aws cli or Terraform in Docker"
+                    loggerLib.echoBanner("Pipeline running logger banner test.")
+                    def log = load "logging.groovy"
+                    log.logInfo("Pipeline running Java Logger test")
                 }
             }
         }
-    }
 
-    stage("Run API Tests") {
-        steps {
-            script {
-                buildAPILib.runAPITests()
-            }
-        }
-    }
-
-    stage("Configure AWS Environment") {
-        when {
-            expression {
-                return pipelineAction != "test"
-            }
-        }
-
-        steps {
-            script {
-                commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
-            }
-        }
-    }
-
-    stage("Init and Plan") {
-        when {
-            expression {
-                return pipelineAction != "test" || pipelineAction != "deploy-api"
+        stage("Update Node") {
+            steps {
+                script {
+                    sh """
+                      apt-get update
+                   """
+                    try {
+                        sh """
+                         terraform --version
+                         aws --version
+                       """
+                    } catch (err) {
+                        echo "$err installing aws cli or Terraform in Docker"
+                    }
+                }
             }
         }
 
-        steps {
-            script {
-                terraformLib.terraformInit(backendBucket, appFolder, awsRegion, cloudEnv, stateTable, accessKey, secretKey)
-                terraformLib.planTerraform(backendBucket, appFolder, awsRegion, cloudEnv)
-            }
-        }
-    }
-
-    stage("Build API Environment") {
-        when {
-            expression {
-                return pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
+        stage("Run API Tests") {
+            steps {
+                script {
+                    buildAPILib.runAPITests()
+                }
             }
         }
 
-        steps {
-            script {
-                commonLib.buildKotlinEnvironment()
-                storageLib.getAPIEnvFile(backendBucket)
+        stage("Configure AWS Environment") {
+            when {
+                expression {
+                    return pipelineAction != "test"
+                }
+            }
+
+            steps {
+                script {
+                    commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
+                }
+            }
+        }
+
+        stage("Init and Plan") {
+            when {
+                expression {
+                    return pipelineAction != "test" || pipelineAction != "deploy-api"
+                }
+            }
+
+            steps {
+                script {
+                    terraformLib.terraformInit(backendBucket, appFolder, awsRegion, cloudEnv, stateTable, accessKey, secretKey)
+                    terraformLib.planTerraform(backendBucket, appFolder, awsRegion, cloudEnv)
+                }
+            }
+        }
+
+        stage("Build API Environment") {
+            when {
+                expression {
+                    return pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
+                }
+            }
+
+            steps {
+                script {
+                    commonLib.buildKotlinEnvironment()
+                    storageLib.getAPIEnvFile(backendBucket)
+                }
             }
         }
     }
