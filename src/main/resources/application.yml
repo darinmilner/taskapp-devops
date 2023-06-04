@@ -9,6 +9,10 @@ management:
   application:
     name: Task-API
     description: Simple Task API
+
+server:
+  port: 8081
+
 spring:
   profiles:
     active: local

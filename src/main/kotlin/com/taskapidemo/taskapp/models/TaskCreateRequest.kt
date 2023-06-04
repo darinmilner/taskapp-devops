@@ -4,6 +4,7 @@ import com.taskapidemo.taskapp.data.Priority
 import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 
+// TODO - createdAt and updatedAt should be automatically set
 data class TaskCreateRequest(
     @NotBlank(message = "Task description can not be empty")
     val description: String,

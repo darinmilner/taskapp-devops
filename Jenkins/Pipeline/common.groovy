@@ -70,6 +70,7 @@ def configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey) {
         """
     } catch (err) {
         echo "Error configuring AWS Profile"
+        // TODO: log and throw error
     }
 }
 

@@ -54,7 +54,7 @@ pipeline {
                     echo "Cloud Environment $cloudEnv"
 
                     loggerLib.echoBanner("Pipeline running logger banner test.")
-                    def log = load "logging.groovy"
+                    def log = load "Jenkins/Pipeline/logging.groovy"
                     log.logInfo("Pipeline running Java Logger test")
                 }
             }
@@ -72,6 +72,7 @@ pipeline {
                         """
                     } catch (err) {
                         echo "$err installing Terraform in Docker"
+                        loggerLib.errorBanner("Terraform is not installed. Please check the Dockerfile")
                     }
                 }
             }
@@ -109,7 +110,7 @@ pipeline {
             steps {
                 script {
                     terraformLib.terraformInit(backendBucket, appFolder, awsRegion, cloudEnv, stateTable, accessKey, secretKey)
-                    terraformLib.planTerraform(backendBucket, appFolder, awsRegion, cloudEnv)
+                    terraformLib.terraformPlan(appFolder, awsRegion, cloudEnv)
                 }
             }
         }

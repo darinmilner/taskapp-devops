@@ -20,12 +20,12 @@ def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, acc
             -backend-config="dynamodb_table=${stateTable}"
         """
     } catch (err) {
-        returnError(err)
+        returnError(err, "Terraform init failed")
         throw err
     }
 }
 
-def planTerraform(backendBucket, appFolder, cloudEnv, awsRegion) {
+def terraformPlan(appFolder, cloudEnv, awsRegion) {
     if (appFolder == "database") {
         appFolder = "terraform/database"
     } else if (appFolder == "lambdas") {
@@ -33,14 +33,22 @@ def planTerraform(backendBucket, appFolder, cloudEnv, awsRegion) {
     }
 
     echo "Running terraform plan in folder $appFolder"
-
-    sh """
-        terraform plan
-    """
+    try {
+        sh """
+            cd ${appFolder}
+            terraform fmt
+            terraform validate -no-color
+            terraform plan -var aws_region=${awsRegion} \\
+                -var env=${cloudEnv} 
+        """
+    } catch (Exception err) {
+        returnError(err, "Terraform plan failed")
+        throw err
+    }
 }
 
-def returnError(err) {
-    echo "Terraform init failed $err"
+def returnError(err, message) {
+    echo "$message Error: $err"
     echo err.getMessage()
 }
 
