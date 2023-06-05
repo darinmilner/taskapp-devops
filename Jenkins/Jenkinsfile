@@ -71,7 +71,7 @@ pipeline {
                     echo "Current AWS Region: $awsRegion"
                     echo "Cloud Environment $cloudEnv"
 
-                    loggerLib.echoBanner("Pipeline Variables set\n appFolder: $appFolder\nregion: $awsRegion\n backend bucket $backendBucket\n")
+                    loggerLib.echoBanner("Pipeline Variables set\n \tappFolder: $appFolder\n \tregion: $awsRegion\n \tbackend bucket $backendBucket\n")
                     def log = load "Jenkins/Pipeline/logging.groovy"
                     log.logInfo("Pipeline Variables set\n appFolder: $appFolder\nregion: $awsRegion\n")
                 }
