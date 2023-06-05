@@ -15,6 +15,7 @@ module "network" {
   zone1         = local.zone1
   zone2         = local.zone2
   open-cidr     = local.open_cidr
+  common-tags   = local.common-tags
 }
 
 module "server" {

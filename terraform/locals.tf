@@ -1,6 +1,7 @@
 locals {
   zone1         = "${var.aws-region}a"
   zone2         = "${var.aws-region}b"
+  zone3         = "${var.aws-region}c"
   server-port   = 8080
   db-port       = 5432
   all-ports     = 0
@@ -13,7 +14,7 @@ locals {
 
   common-tags = {
     Env       = var.system-environment
-    ManagedBy = "terraform"
+    ManagedBy = "Terraform"
     Project   = var.project
   }
 }

@@ -9,8 +9,8 @@ def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
 def accessKey
 def secretKey
 def appFolder
-def backendBucket
-def awsRegion
+String backendBucket
+String awsRegion
 def pipelineAction
 def stateTable
 def cloudEnv
@@ -22,50 +22,24 @@ pipeline {
         String API_UPLOAD_BUCKET = "api-bucket"
         String API_BUCKET_KEY = "api"
         String TERRAFORM_VERSION = "1.4.6"
+        String GRADLE_VERSION = "8.1.1"
     }
 
     parameters {
         choice(name: "APP_FOLDER", choices: ["core-resources", "lambdas", "database", "api"], description: "Folder where pipeline actions should run")
         choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
-        password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
-        password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
         choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1", "ap-southeast-3"], description: "AWS Region to deploy resources and app")
+        password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
+        password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
     }
 
     stages {
-        stage("Set Variables") {
-            steps {
-                script {
-                    pipelineAction = params.PIPELINE_ACTION
-                    awsRegion = params.AWS_REGION
-                    appFolder = params.APP_FOLDER
-                    cloudEnv = params.CLOUD_ENVIRONMENT
-                    accessKey = params.AWS_ACCESS_KEY
-                    secretKey = params.AWS_SECRET_KEY
-
-                    backendBucket = commonLib.getBucketName(awsRegion)
-                    stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
-
-                    echo "App Folder: $appFolder"
-                    echo "Backend State and storage bucket: $backendBucket"
-                    echo "DynamoDB state table Name: $stateTable"
-                    echo "Current AWS Region: $awsRegion"
-                    echo "Cloud Environment $cloudEnv"
-
-                    loggerLib.echoBanner("Pipeline running logger banner test.")
-                    def log = load "Jenkins/Pipeline/logging.groovy"
-                    log.logInfo("Pipeline running Java Logger test")
-                }
-            }
-        }
-
         stage("Update Node") {
             steps {
                 script {
-                    sh """
-                        apt-get update
-                    """
+                    commonLib.installCoreDependencies()
+                    commonLib.installAWSCLI()
                     try {
                         sh """
                             terraform --version
@@ -78,9 +52,36 @@ pipeline {
             }
         }
 
+        stage("Set Variables") {
+            steps {
+                script {
+                    pipelineAction = params.PIPELINE_ACTION
+                    awsRegion = params.AWS_REGION
+                    appFolder = params.APP_FOLDER
+                    cloudEnv = params.CLOUD_ENVIRONMENT
+                    accessKey = params.ACCESS_KEY
+                    secretKey = params.SECRET_KEY
+
+                    backendBucket = commonLib.getBucketName(awsRegion)
+                    stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
+
+                    echo "App Folder: $appFolder"
+                    echo "Backend State and storage bucket: $backendBucket"
+                    echo "DynamoDB state table Name: $stateTable"
+                    echo "Current AWS Region: $awsRegion"
+                    echo "Cloud Environment $cloudEnv"
+
+                    loggerLib.echoBanner("Pipeline Variables set\n appFolder: $appFolder\nregion: $awsRegion\n backend bucket $backendBucket\n")
+                    def log = load "Jenkins/Pipeline/logging.groovy"
+                    log.logInfo("Pipeline Variables set\n appFolder: $appFolder\nregion: $awsRegion\n")
+                }
+            }
+        }
+
         stage("Run API Tests") {
             steps {
                 script {
+                    buildAPILib.installGradle()
                     buildAPILib.runAPITests()
                 }
             }
@@ -109,7 +110,7 @@ pipeline {
 
             steps {
                 script {
-                    terraformLib.terraformInit(backendBucket, appFolder, awsRegion, cloudEnv, stateTable, accessKey, secretKey)
+                    terraformLib.terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, accessKey, secretKey)
                     terraformLib.terraformPlan(appFolder, awsRegion, cloudEnv)
                 }
             }

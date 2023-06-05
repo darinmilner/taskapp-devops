@@ -56,23 +56,3 @@ resource "aws_iam_role_policy_attachment" "lambda-policy-attachment" {
   policy_arn = aws_iam_policy.salambda-policy.arn
   depends_on = [aws_iam_role.salambda-role, aws_iam_policy.salambda-policy]
 }
-
-resource "aws_s3_bucket_policy" "bucket-policy" {
-  bucket = aws_s3_bucket.storage-bucket.bucket
-
-  policy = jsonencode({
-    Version   = "2012-10-17",
-    Statement = [
-      {
-        Sid       = "VisualEditor0"
-        Effect    = "Allow"
-        Action    = "s3*"
-        Principal = "*"
-        Resource  = [
-          data.aws_s3_bucket.storage-bucket.arn,
-          "${data.aws_s3_bucket.storage-bucket.arn}/*"
-        ]
-      }
-    ]
-  })
-}

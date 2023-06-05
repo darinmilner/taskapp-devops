@@ -56,3 +56,7 @@ variable "zone1" {
 variable "zone2" {
   type = string
 }
+
+variable "common-tags" {
+  type = map(string)
+}

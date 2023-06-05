@@ -12,7 +12,8 @@ def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, acc
     try {
         sh """
             cd ${appFolder}
-            terraform init -backend-config="bucket=${backendBucket}" \\
+            terraform init -no-color \\
+            -backend-config="bucket=${backendBucket}" \\
             -backend-config="key=${appFolder}/${cloudEnv}/terraform.tfstate" \\
             -backend-config="region=${awsRegion}" \\
             -backend-config="access_key=${accessKey}" \\
