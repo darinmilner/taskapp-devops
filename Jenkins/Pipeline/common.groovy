@@ -90,6 +90,17 @@ def configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey) {
 def installAWSCLI() {
     echo "Installing AWS CLI"
     sh """
+        curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+        unzip awscli-bundle.zip
+        ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+        which aws
+        aws --version
+    """
+}
+
+def installAWSCLIOLD() {
+    echo "Installing AWS CLI"
+    sh """
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         unzip -f awscliv2.zip
         ./aws/install --update

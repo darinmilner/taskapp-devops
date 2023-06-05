@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     commonLib.installCoreDependencies()
-                    commonLib.installAWSCLI()
+
                     try {
                         sh """
                             terraform --version
@@ -96,6 +96,7 @@ pipeline {
 
             steps {
                 script {
+                    commonLib.installAWSCLI()
                     commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
                 }
             }
