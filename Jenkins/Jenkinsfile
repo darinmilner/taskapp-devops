@@ -61,8 +61,8 @@ pipeline {
                     awsRegion = params.AWS_REGION
                     appFolder = params.APP_FOLDER
                     cloudEnv = params.CLOUD_ENVIRONMENT
-                    accessKey = params.ACCESS_KEY
-                    secretKey = params.SECRET_KEY
+                    accessKey = params.AWS_ACCESS_KEY
+                    secretKey = params.AWS_SECRET_KEY
 
                     backendBucket = commonLib.getBucketName(awsRegion)
                     stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
