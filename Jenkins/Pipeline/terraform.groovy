@@ -42,13 +42,18 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
 
 def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     String folder = getTerraformAppFolder(appFolder)
-    sh """
+    try {
+        sh """
         cd ${folder}
         terraform apply --auto-approve \\
             "${appFolder}.tfplan"      \\
             -var aws_region=${awsRegion} \\
             -var env=${cloudEnv} 
-    """
+        """
+    } catch (Exception err) {
+        returnError(err, "terraform apply failed. Please check your Terraform code.")
+        throw err
+    }
 }
 
 def returnError(err, message) {
@@ -57,12 +62,21 @@ def returnError(err, message) {
 }
 
 String getTerraformAppFolder(String appFolder) {
-    if (appFolder == "database") {
-        appFolder = "terraform/database"
-    } else if (appFolder == "lambdas") {
-        appFolder = "terraform/lambdas"
-    } else if (appFolder == "core-resources") {
-        appFolder = "terraform/core-resources"
+    switch (appFolder) {
+        case "database":
+            appFolder = "terraform/database"
+            break
+        case "lambdas":
+            appFolder = "terraform/lambdas"
+            break
+        case "core-resources":
+            appFolder = "terraform/core-resources"
+            break
+        case "api":
+            appFolder = "src"
+            break
+        default:
+            throw new Exception("Invalid or unsupported app folder $appFolder")
     }
 
     return appFolder

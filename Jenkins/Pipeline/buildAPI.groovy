@@ -10,7 +10,8 @@ def runAPITests() {
     echo "Running API tests"
 
     script {
-        sh "gradle clean test"
+        sh "gradle clean test --info"
+        sh "cat build/reports/test/index.html"
     }
 }
 
