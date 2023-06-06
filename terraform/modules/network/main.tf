@@ -22,7 +22,7 @@ resource "aws_subnet" "private" {
 
   cidr_block              = var.cidr-block
   availability_zone       = var.zone2
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 }
 
 resource "aws_vpc_endpoint" "s3-endpoint" {

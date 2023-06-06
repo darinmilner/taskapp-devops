@@ -44,9 +44,10 @@ def installGradle() {
 def runAPITests() {
     echo "Running API tests"
 
-    exportGradlePath()
-
-    sh "gradle test"
+    script {
+        exportGradlePath()
+        sh "gradle test"
+    }
 }
 
 return this
