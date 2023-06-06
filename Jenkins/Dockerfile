@@ -1,7 +1,5 @@
 FROM jenkins/jenkins:lts-jdk11
 
-ARG TERRAFORM_VERSION=1.4.6
-
 USER root
 
 RUN apt-get update && apt-get install -y lsb-release
@@ -15,26 +13,6 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
     $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 
 RUN apt-get update && apt-get install -y docker-ce-cli
-
-################################
-# Install Terraform
-################################
-RUN \
-    # Update
-  	apt-get update -y && \
-  	# Install dependencies
-  	apt-get install unzip wget -y
-
-# Download terraform for linux
-RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-# Unzip
-RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-# Move to local bin
-RUN mv terraform /usr/local/bin/
-# Check that it's installed
-RUN terraform --version
-
-RUN rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 USER jenkins
 

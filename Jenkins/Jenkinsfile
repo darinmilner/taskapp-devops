@@ -16,7 +16,11 @@ def stateTable
 def cloudEnv
 
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filename "Agents/Dockerfile"
+        }
+    }
 
     environment {
         String API_UPLOAD_BUCKET = "api-bucket"
@@ -38,8 +42,6 @@ pipeline {
         stage("Update Node") {
             steps {
                 script {
-                    commonLib.installCoreDependencies()
-
                     try {
                         sh """
                             terraform --version
@@ -72,8 +74,6 @@ pipeline {
                     echo "Cloud Environment $cloudEnv"
 
                     loggerLib.echoBanner(" \tPipeline Variables set\n \tappFolder: $appFolder\n \tregion: $awsRegion\n \tbackend bucket $backendBucket\n")
-//                     def log = load "Jenkins/Pipeline/logging.groovy"
-//                     log.logInfo("Pipeline Variables set\n appFolder: $appFolder\nregion: $awsRegion\n")
                 }
             }
         }
@@ -81,7 +81,6 @@ pipeline {
         stage("Run API Tests") {
             steps {
                 script {
-                    buildAPILib.installGradle()
                     buildAPILib.runAPITests()
                 }
             }
@@ -96,7 +95,7 @@ pipeline {
 
             steps {
                 script {
-                    commonLib.installAWSCLI()
+                    //commonLib.installAWSCLI()
                     commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
                 }
             }

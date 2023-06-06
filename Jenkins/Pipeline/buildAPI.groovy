@@ -45,7 +45,6 @@ def runAPITests() {
     echo "Running API tests"
 
     script {
-        exportGradlePath()
         sh "gradle test"
     }
 }

@@ -1,12 +1,3 @@
-def installCoreDependencies() {
-    sh """
-        apt-get update
-        apt-get install zip
-        apt-get install unzip
-        apt-get install wget
-    """
-}
-
 String getRegionShortName(String region) {
     return region.replace("-", "")
 }
