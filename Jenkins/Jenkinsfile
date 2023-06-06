@@ -12,13 +12,13 @@ String appFolder
 String backendBucket
 String awsRegion
 def pipelineAction
-def stateTable
-def cloudEnv
+String stateTable
+String cloudEnv
 
 pipeline {
     agent {
         dockerfile {
-            filename "Agents/Dockerfile"
+            filename "Jenkins/Agents/Dockerfile"
         }
     }
 
@@ -112,6 +112,20 @@ pipeline {
                 script {
                     terraformLib.terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, accessKey, secretKey)
                     terraformLib.terraformPlan(appFolder, awsRegion, cloudEnv)
+                }
+            }
+        }
+
+         stage("Apply") {
+            when {
+                expression {
+                    return pipelineAction != "apply"
+                }
+            }
+
+            steps {
+                script {
+                    terraformLib.terraformApply(appFolder, awsRegion, cloudEnv)
                 }
             }
         }

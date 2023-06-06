@@ -1,17 +1,11 @@
 def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, accessKey, secretKey) {
-    if (appFolder == "database") {
-        appFolder = "terraform/database"
-    } else if (appFolder == "lambdas") {
-        appFolder = "terraform/lambdas"
-    } else if (appFolder == "core-resources") {
-        appFolder = "terraform"
-    }
+    String folder = getTerraformAppFolder(appFolder)
 
-    echo "Initializing Terraform in folder $appFolder"
+    echo "Initializing Terraform in folder $folder"
 
     try {
         sh """
-            cd ${appFolder}
+            cd ${folder}
             terraform init -no-color \\
             -backend-config="bucket=${backendBucket}" \\
             -backend-config="key=${appFolder}/${cloudEnv}/terraform.tfstate" \\
@@ -26,20 +20,18 @@ def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, acc
     }
 }
 
-def terraformPlan(appFolder, cloudEnv, awsRegion) {
-    if (appFolder == "database") {
-        appFolder = "terraform/database"
-    } else if (appFolder == "lambdas") {
-        appFolder = "terraform/lambdas"
-    }
+def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
+    String folder = getTerraformAppFolder(appFolder)
 
-    echo "Running terraform plan in folder $appFolder"
+    echo "Running terraform plan in folder $folder"
     try {
         sh """
-            cd ${appFolder}
+            cd ${folder}
             terraform fmt
             terraform validate -no-color
-            terraform plan -var aws_region=${awsRegion} \\
+            terraform plan
+                -out ${appFolder}.tfplan
+                -var aws_region=${awsRegion} \\
                 -var env=${cloudEnv} 
         """
     } catch (Exception err) {
@@ -48,9 +40,32 @@ def terraformPlan(appFolder, cloudEnv, awsRegion) {
     }
 }
 
+def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
+    String folder = getTerraformAppFolder(appFolder)
+    sh """
+        cd ${folder}
+        terraform apply
+            "${appFolder}.tfplan"
+            -var aws_region=${awsRegion} \\
+            -var env=${cloudEnv} 
+    """
+}
+
 def returnError(err, message) {
     echo "$message Error: $err"
     echo err.getMessage()
+}
+
+String getTerraformAppFolder(String appFolder) {
+    if (appFolder == "database") {
+        appFolder = "terraform/database"
+    } else if (appFolder == "lambdas") {
+        appFolder = "terraform/lambdas"
+    } else if (appFolder == "core-resources") {
+        appFolder = "terraform/core-resources"
+    }
+
+    return appFolder
 }
 
 return this
