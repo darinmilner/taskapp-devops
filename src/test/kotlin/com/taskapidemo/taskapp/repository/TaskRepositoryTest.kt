@@ -23,4 +23,22 @@ class TaskRepositoryTest {
         // then
         assertThat(task).isNotNull
     }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun checkNumberOfRecordsWhenAllTasksAreFetched() {
+        val tasks: List<Task> = objectUnderTest.findAll()
+
+        assertThat(tasks.size).isEqualTo(numberOfRecordsInTestInfoSQL)
+    }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun checkNumberOfRecordsAfterATaskIsDeleted() {
+        objectUnderTest.deleteById(111)
+
+        val tasks: List<Task> = objectUnderTest.findAll()
+
+        assertThat(tasks.size).isEqualTo(numberOfRecordsInTestInfoSQL - 1)
+    }
 }

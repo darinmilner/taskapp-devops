@@ -1,6 +1,8 @@
 def buildKotlinEnvironment() {
     echo "Building Kotlin"
+
     exportGradlePath()
+
     sh """
         java --version
     """
@@ -12,7 +14,7 @@ def exportGradlePath() {
     try {
         sh """
          export GRADLE_HOME="/opt/gradle/gradle-${env.GRADLE_VERSION}"
-         export PATH="\\${GRADLE_HOME}/bin:\\${PATH}"
+         export PATH="\${GRADLE_HOME}/bin:\${PATH}"
          gradle --version
        """
     } catch (Exception err) {
@@ -41,7 +43,9 @@ def installGradle() {
 
 def runAPITests() {
     echo "Running API tests"
+
     exportGradlePath()
+
     sh "gradle test"
 }
 
