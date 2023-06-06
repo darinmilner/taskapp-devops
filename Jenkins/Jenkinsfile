@@ -119,7 +119,7 @@ pipeline {
          stage("Apply") {
             when {
                 expression {
-                    return pipelineAction != "apply"
+                    return pipelineAction == "apply"
                 }
             }
 
