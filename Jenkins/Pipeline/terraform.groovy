@@ -44,8 +44,8 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     String folder = getTerraformAppFolder(appFolder)
     sh """
         cd ${folder}
-        terraform apply
-            "${appFolder}.tfplan"
+        terraform apply --auto-approve \\
+            "${appFolder}.tfplan"      \\
             -var aws_region=${awsRegion} \\
             -var env=${cloudEnv} 
     """

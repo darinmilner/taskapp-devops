@@ -1,8 +1,8 @@
-def getAPIEnvFile(bucketName) {
+def getAPIEnvFile(String bucketName) {
     try {
-        echo "Getting .env file from s3 bucket $bucketName"
+        echo "Getting application file from s3 bucket $bucketName"
         sh """
-            aws s3 cp s3://${bucketName}/application-prod.yml src/resources/
+            aws s3 cp s3://${bucketName}/application-prod.yaml src/resources/application-prod.yaml
         """
     } catch (Exception err) {
         echo err

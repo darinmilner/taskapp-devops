@@ -95,8 +95,8 @@ pipeline {
 
             steps {
                 script {
-                    //commonLib.installAWSCLI()
                     commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
+                    storageLib.getAPIEnvFile(backendBucket)
                 }
             }
         }

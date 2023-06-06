@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "network" {
-  source        = "modules/network"
+  source        = "./modules/network"
   aws-region    = var.aws-region
   all-ports     = local.all-ports
   all-protocols = local.all-protocols
@@ -19,7 +19,7 @@ module "network" {
 }
 
 module "server" {
-  source     = "modules/server"
+  source     = "./modules/server"
   aws-region = var.aws-region
   server-sg  = module.network.server-sg
   zone1      = local.azs[0]
