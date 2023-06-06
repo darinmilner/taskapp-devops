@@ -1,6 +1,6 @@
 INSERT INTO task
 (`id`, `description`, `is_reminder_set`, `is_task_open`, `priority`, `created_at`, `updated_at`)
-VALUES (111, 'test description', false, false, 'LOW', CURRENT_TIME(), CURRENT_TIME());
+VALUES (111, 'test description1', false, false, 'LOW', CURRENT_TIME(), CURRENT_TIME());
 
 INSERT INTO task
 (`id`, `description`, `is_reminder_set`, `is_task_open`, `priority`, `created_at`, `updated_at`)

@@ -6,9 +6,9 @@ def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
 def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
 def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
 def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
-def accessKey
-def secretKey
-def appFolder
+String accessKey
+String secretKey
+String appFolder
 String backendBucket
 String awsRegion
 def pipelineAction

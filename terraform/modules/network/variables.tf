@@ -1,16 +1,16 @@
 variable "cidr-block" {
   type    = string
-  default = "172.27.72.0/24"
+  default = "10.0.0.0/24"
 }
 
 variable "private-cidrs" {
   type    = list(string)
-  default = ["172.27.72.1/24", "172.27.72.2/24"]
+  default = ["10.0.10.0/24", "10.0.11.0/24"]
 }
 
 variable "vpc-cidr" {
   type    = string
-  default = "172.27.72.0/22"
+  default = "10.0.0.0/16"
 }
 
 variable "aws-region" {

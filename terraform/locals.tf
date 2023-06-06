@@ -1,7 +1,8 @@
 locals {
-  zone1         = "${var.aws-region}a"
-  zone2         = "${var.aws-region}b"
-  zone3         = "${var.aws-region}c"
+  zone1         = data.aws_availability_zones.az-zones.names[0]
+  zone2         = data.aws_availability_zones.az-zones.names[1]
+  zone3         = data.aws_availability_zones.az-zones.names[2]
+  azs           = slice(data.aws_availability_zones.az-zones.names, 0, 3 )
   server-port   = 8080
   db-port       = 5432
   all-ports     = 0

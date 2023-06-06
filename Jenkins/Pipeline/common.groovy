@@ -31,7 +31,7 @@ String getBucketName(String awsRegion) {
     }
 }
 
-def getDynamoDBStateTableName(awsRegion) {
+String getDynamoDBStateTableName(String awsRegion) {
     String tableName = "state-lock-table-"
     switch (awsRegion) {
         case "us-west-1":
@@ -71,7 +71,7 @@ def getAppFolder(pipelineAction) {
     }
 }
 
-def configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey) {
+def configureAWSProfile(String awsRegion, String awsAccessKey, String awsSecretKey) {
     echo "Configuring AWS Profile"
 
     try {
@@ -81,8 +81,8 @@ def configureAWSProfile(awsRegion, awsAccessKey, awsSecretKey) {
             aws configure set region ${awsRegion} --profile Default
             aws configure set output "json" --profile Default
         """
-    } catch (err) {
-        echo "Error configuring AWS Profile"
+    } catch (Exception err) {
+        echo "Error configuring AWS Profile $err"
         // TODO: log and throw error
     }
 }

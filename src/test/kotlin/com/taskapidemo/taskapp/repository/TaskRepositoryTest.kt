@@ -41,4 +41,30 @@ class TaskRepositoryTest {
 
         assertThat(tasks.size).isEqualTo(numberOfRecordsInTestInfoSQL - 1)
     }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun whenAllTasksAreQueriedCheckForCorrectNumberOpenTasks() {
+        val tasks: List<Task> = objectUnderTest.getAllOpenTasks()
+
+        assertThat(tasks.size).isEqualTo(numberOfOpenRecordsInTestInfoSQL)
+    }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun whenAllTasksAreQueriedCheckForCorrectNumberClosedTasks() {
+        val tasks: List<Task> = objectUnderTest.getAllClosedTasks()
+
+        assertThat(tasks.size).isEqualTo(numberOfClosedRecordsInTestInfoSQL)
+    }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun checkIfDescriptionAlreadyExists() {
+        val descriptionExists1 = objectUnderTest.doesDescriptionExist("test description1")
+        val descriptionExists2 = objectUnderTest.doesDescriptionExist("Test description that does not exist")
+
+        assertThat(descriptionExists1).isTrue()
+        assertThat(descriptionExists2).isFalse()
+    }
 }
