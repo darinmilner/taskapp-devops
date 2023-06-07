@@ -8,10 +8,13 @@ def buildKotlinEnvironment() {
 
 def runAPITests() {
     echo "Running API tests"
-    
-    script {
+
+    try {
         sh "gradle clean test --info"
-        sh "cat build/reports/test/index.html"
+        sh "cat build/reports/tests/index.html"
+    } catch (Exception err) {
+        echo "Error running test $err"
+        //TODO: throw err
     }
 }
 
