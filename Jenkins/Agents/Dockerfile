@@ -11,7 +11,7 @@ RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 # Move to local bin
 RUN mv terraform /usr/local/bin/
 # Check that it's installed
-RUN terraform --version
+RUN echo terraform --version
 
 RUN rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
@@ -21,5 +21,5 @@ RUN unzip awscli-bundle.zip
 
 RUN ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
-RUN  which aws
+RUN echo which aws
 
