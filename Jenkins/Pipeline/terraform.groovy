@@ -10,8 +10,7 @@ def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, acc
             -backend-config="bucket=${backendBucket}" \\
             -backend-config="key=${appFolder}/${cloudEnv}/terraform.tfstate" \\
             -backend-config="region=${awsRegion}" \\
-            -backend-config="access_key=${accessKey}" \\
-            -backend-config="secret_key=${secretKey}" \\
+            -backend-config="profile=Default" \\
             -backend-config="dynamodb_table=${stateTable}"
         """
     } catch (err) {
@@ -29,8 +28,8 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             cd ${folder}
             terraform fmt
             terraform validate -no-color
-            terraform plan
-                -out ${appFolder}.tfplan
+            terraform plan -no-color \\
+                -out ${appFolder}.tfplan \\
                 -var aws_region=${awsRegion} \\
                 -var env=${cloudEnv} 
         """

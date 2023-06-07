@@ -12,7 +12,7 @@ def runAPITests() {
     try {
         sh "gradle clean test --info"
         sh "pwd"
-        sh "cat build/reports/tests/index.html"
+        sh "cat build/reports/tests/test/index.html"
     } catch (Exception err) {
         echo "Error running test $err"
         //TODO: throw err
