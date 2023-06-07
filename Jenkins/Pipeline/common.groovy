@@ -44,11 +44,11 @@ String getDynamoDBStateTableName(String awsRegion) {
 
 def configureAWSProfile(String awsRegion, String awsAccessKey, String awsSecretKey) {
     echo "Configuring AWS Profile"
-    String accessKey = awsAccessKey
-    String secretKey = awsSecretKey
+    String ACCESSKEY = awsAccessKey
+    String SECRETKEY = awsSecretKey
     try {
-        sh 'aws configure set aws_access_key_id $accessKey --profile Default'
-        sh 'aws configure set aws_secret_access_key $secretKey --profile Default'
+        sh 'aws configure set aws_access_key_id ${ACCESSKEY} --profile Default'
+        sh 'aws configure set aws_secret_access_key ${SECRETKEY} --profile Default'
         sh """
             aws configure set region ${awsRegion} --profile Default
             aws configure set output "json" --profile Default

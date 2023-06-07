@@ -39,12 +39,13 @@ pipeline {
     }
 
     stages {
-        stage("Update Node") {
+        stage("Check Agent") {
             steps {
                 script {
                     try {
                         sh """
                             terraform --version
+                            gradle --version
                         """
                     } catch (err) {
                         echo "$err installing Terraform in Docker"
@@ -79,6 +80,11 @@ pipeline {
         }
 
         stage("Run API Tests") {
+             when {
+                expression {
+                    return pipelineAction == "test"
+                }
+            }
             steps {
                 script {
                     buildAPILib.runAPITests()

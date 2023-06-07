@@ -5,7 +5,7 @@ def getAPIEnvFile(String bucketName) {
             aws s3 cp s3://${bucketName}/application-prod.yaml src/resources/application-prod.yaml --profile Default
         """
     } catch (Exception err) {
-        echo err
+        echo "Error getting file from s3 bucket $err"
         throw err
     }
 }
