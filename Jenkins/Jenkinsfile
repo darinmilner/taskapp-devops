@@ -6,12 +6,10 @@ def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
 def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
 def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
 def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
-String accessKey
-String secretKey
 String appFolder
 String backendBucket
 String awsRegion
-def pipelineAction
+String pipelineAction
 String stateTable
 String cloudEnv
 
@@ -34,8 +32,6 @@ pipeline {
         choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
         choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1", "ap-southeast-3"], description: "AWS Region to deploy resources and app")
-        password(name: "AWS_ACCESS_KEY", description: "AWS ACCESS KEY")
-        password(name: "AWS_SECRET_KEY", description: "AWS SECRET KEY")
     }
 
     stages {
@@ -62,8 +58,6 @@ pipeline {
                     awsRegion = params.AWS_REGION
                     appFolder = params.APP_FOLDER
                     cloudEnv = params.CLOUD_ENVIRONMENT
-                    accessKey = params.AWS_ACCESS_KEY
-                    secretKey = params.AWS_SECRET_KEY
 
                     backendBucket = commonLib.getBucketName(awsRegion)
                     stateTable = commonLib.getDynamoDBStateTableName(awsRegion)
@@ -82,7 +76,7 @@ pipeline {
         stage("Run API Tests") {
              when {
                 expression {
-                    return pipelineAction == "test"
+                    return pipelineAction == "test" || pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
                 }
             }
             steps {
@@ -102,7 +96,6 @@ pipeline {
             steps {
                 script {
                     commonLib.configureAWSProfile(awsRegion)
-                    storageLib.getAPIEnvFile(backendBucket)
                 }
             }
         }
@@ -159,6 +152,7 @@ pipeline {
 
             steps {
                 script {
+                    storageLib.getAPIEnvFile(backendBucket)
                     commonLib.buildKotlinEnvironment()
                 }
             }
