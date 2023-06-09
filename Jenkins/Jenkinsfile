@@ -101,7 +101,7 @@ pipeline {
 
             steps {
                 script {
-                    commonLib.configureAWSProfile(awsRegion, accessKey, secretKey)
+                    commonLib.configureAWSProfile(awsRegion)
                     storageLib.getAPIEnvFile(backendBucket)
                 }
             }
@@ -135,6 +135,20 @@ pipeline {
                 }
             }
         }
+
+        stage("Destroy") {
+                    when {
+                        expression {
+                            return pipelineAction == "destroy"
+                        }
+                    }
+
+                    steps {
+                        script {
+                            terraformLib.terraformDestroy(appFolder, awsRegion, cloudEnv)
+                        }
+                    }
+                }
 
         stage("Build API Environment") {
             when {

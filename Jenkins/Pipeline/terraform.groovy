@@ -55,6 +55,22 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     }
 }
 
+
+def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
+    String folder = getTerraformAppFolder(appFolder)
+    try {
+        sh """
+        cd ${folder}
+        terraform destroy --auto-approve \\
+            -var aws_region=${awsRegion} \\
+            -var env=${cloudEnv} 
+        """
+    } catch (Exception err) {
+        returnError(err, "terraform apply failed. Please check your Terraform code.")
+        throw err
+    }
+}
+
 def returnError(err, message) {
     echo "$message Error: $err"
     echo err.getMessage()

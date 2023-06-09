@@ -42,13 +42,38 @@ String getDynamoDBStateTableName(String awsRegion) {
     }
 }
 
-def configureAWSProfile(String awsRegion, String awsAccessKey, String awsSecretKey) {
+
+def configureAWSProfile(String awsRegion) {
+    echo "Configuring AWS Profile"
+
+    withCredentials([string(credentialsId: "accessId", variable: "ACCESSKEY")]) {
+        sh 'aws configure set "aws_access_key_id $ACCESSKEY" --profile Default'
+    }
+
+    withCredentials([string(credentialsId: "secretId", variable: "SECRETKEY")]) {
+        sh 'aws configure set "aws_secret_access_key $SECRETKEY" --profile Default'
+    }
+
+    try {
+        sh """
+            aws configure set region ${awsRegion} --profile Default
+            aws configure set output "json" --profile Default
+        """
+
+    } catch (Exception err) {
+        echo "Error configuring AWS Profile $err"
+        throw err
+    }
+}
+
+
+def configureAWSProfileUnsafe(String awsRegion, String awsAccessKey, String awsSecretKey) {
     echo "Configuring AWS Profile"
     String ACCESSKEY = awsAccessKey
     String SECRETKEY = awsSecretKey
     try {
-        sh 'aws configure set aws_access_key_id ${ACCESSKEY} --profile Default'
-        sh 'aws configure set aws_secret_access_key ${SECRETKEY} --profile Default'
+        sh 'aws configure set aws_access_key_id "${ACCESSKEY}" --profile Default'
+        sh 'aws configure set aws_secret_access_key "${SECRETKEY}" --profile Default'
         sh """
             aws configure set region ${awsRegion} --profile Default
             aws configure set output "json" --profile Default
