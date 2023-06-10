@@ -82,7 +82,19 @@ pipeline {
             steps {
                 script {
                     buildAPILib.runAPITests()
-                    buildAPILib.zipAndPushAPIToS3(backendBucket)
+                }
+            }
+        }
+
+         stage("Push API to S3") {
+             when {
+                expression {
+                    return appFolder != "lambdas"
+                }
+            }
+            steps {
+                script {
+                    storageLib.zipAndPushAPIToS3(backendBucket)
                 }
             }
         }
