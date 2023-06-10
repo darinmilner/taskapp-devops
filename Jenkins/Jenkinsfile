@@ -86,6 +86,14 @@ pipeline {
             }
         }
 
+        stage("Configure AWS Environment") {
+            steps {
+                script {
+                    commonLib.configureAWSProfile(awsRegion)
+                }
+            }
+        }
+
          stage("Push API to S3") {
              when {
                 expression {
@@ -95,20 +103,6 @@ pipeline {
             steps {
                 script {
                     storageLib.zipAndPushAPIToS3(backendBucket)
-                }
-            }
-        }
-
-        stage("Configure AWS Environment") {
-            when {
-                expression {
-                    return pipelineAction != "test"
-                }
-            }
-
-            steps {
-                script {
-                    commonLib.configureAWSProfile(awsRegion)
                 }
             }
         }
