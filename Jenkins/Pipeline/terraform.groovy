@@ -28,6 +28,7 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             cd ${folder}
             terraform fmt
             terraform validate -no-color
+            export AWS_PROFILE=default
             terraform plan -no-color \\
                 -out ${appFolder}.tfplan \\
                 -var aws_region=${awsRegion} \\
@@ -44,6 +45,7 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     try {
         sh """
         cd ${folder}
+        export AWS_PROFILE=default
         terraform apply --auto-approve \\
             "${appFolder}.tfplan"      \\
             -var aws_region=${awsRegion} \\
@@ -61,6 +63,7 @@ def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
     try {
         sh """
         cd ${folder}
+        export AWS_PROFILE=default
         terraform destroy --auto-approve \\
             -var aws_region=${awsRegion} \\
             -var env=${cloudEnv} 

@@ -44,8 +44,8 @@ pipeline {
                             gradle --version
                         """
                     } catch (err) {
-                        echo "$err installing Terraform in Docker"
-                        loggerLib.errorBanner("Terraform is not installed. Please check the Dockerfile")
+                        echo "$err installing Terraform or Gradle in Docker"
+                        loggerLib.errorBanner("Terraform or Gradle is not installed. Please check the Dockerfile")
                     }
                 }
             }
@@ -82,6 +82,7 @@ pipeline {
             steps {
                 script {
                     buildAPILib.runAPITests()
+                    buildAPILib.zipAndPushAPIToS3(backendBucket)
                 }
             }
         }
@@ -130,18 +131,18 @@ pipeline {
         }
 
         stage("Destroy") {
-                    when {
-                        expression {
-                            return pipelineAction == "destroy"
-                        }
-                    }
-
-                    steps {
-                        script {
-                            terraformLib.terraformDestroy(appFolder, awsRegion, cloudEnv)
-                        }
-                    }
+            when {
+                expression {
+                    return pipelineAction == "destroy"
                 }
+            }
+
+            steps {
+                script {
+                    terraformLib.terraformDestroy(appFolder, awsRegion, cloudEnv)
+                }
+            }
+        }
 
         stage("Build API Environment") {
             when {
