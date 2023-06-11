@@ -9,7 +9,7 @@ resource "aws_secretsmanager_secret" "dbsecretmaster" {
   name = var.secret-name
 
   tags = {
-    "Name" = "AppSecrets"
+    "Name" = "DatabaseSecrets"
   }
 }
 

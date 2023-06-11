@@ -5,3 +5,5 @@ class Errors {
         throw err
     }
 }
+
+return this

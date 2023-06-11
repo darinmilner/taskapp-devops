@@ -57,7 +57,7 @@ variable "env" {
 variable "project" {
   type        = string
   description = "Project name"
-  default     = "School-Management-System"
+  default     = "Task-API"
 }
 
 variable "secret-name" {
