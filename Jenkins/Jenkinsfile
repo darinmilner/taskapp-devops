@@ -42,6 +42,7 @@ pipeline {
                         sh """
                             terraform --version
                             gradle --version
+                            aws --version
                         """
                     } catch (err) {
                         echo "$err installing Terraform or Gradle in Docker"
@@ -81,7 +82,9 @@ pipeline {
             }
             steps {
                 script {
-                    buildAPILib.runAPITests()
+                    timeout(time: 15, unit: "MINUTES") {
+                        buildAPILib.runAPITests()
+                    }
                 }
             }
         }

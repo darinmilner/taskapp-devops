@@ -6,22 +6,36 @@ def getAPIEnvFile(String bucketName) {
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-        echo "Pipeline is exiting!"
+        echo "Pipeline is exiting $err!"
         errorLib.throwError(err, "Error getting file from s3 bucket $err")
     }
 }
 
 def zipAndPushAPIToS3(String bucketName) {
+    String versionNumber = getReleaseVersion()
     try {
         echo "Pushing API code to $bucketName"
         sh """
-            aws s3 sync src/ s3://${bucketName}/api  --profile Default
+            aws s3 sync src/ s3://${bucketName}/api/${versionNumber}/  --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-        echo "Pipeline is exiting!"
+        echo "Pipeline is exiting! $err"
         errorLib.throwError(err, "Error pushing code to S3 bucket $err")
     }
+}
+
+String getReleaseVersion() {
+    def gitCommit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+    String versionNumber
+    if (gitCommit == null) {
+        versionNumber = env.BUILD_NUMBER
+    } else {
+        versionNumber = gitCommit.take(8)
+    }
+
+    println "Version number is $versionNumber"
+    return versionNumber
 }
 
 return this

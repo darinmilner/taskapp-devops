@@ -1,7 +1,7 @@
 class Errors {
     def throwError(Exception err, String message) {
-        echo "$message Error: $err"
-        echo err.getMessage()
+        println "$message Error: $err"
+        println err.getMessage()
         throw err
     }
 }
