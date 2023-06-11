@@ -1,4 +1,4 @@
-def terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable, accessKey, secretKey) {
+def terraformInit(String backendBucket, String appFolder, String cloudEnv, String awsRegion, String stateTable) {
     String folder = getTerraformAppFolder(appFolder)
 
     echo "Initializing Terraform in folder $folder"
@@ -28,7 +28,7 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             cd ${folder}
             terraform fmt
             terraform validate -no-color
-            export AWS_PROFILE=default
+            export AWS_PROFILE=Default
             terraform plan -no-color \\
                 -out ${appFolder}.tfplan \\
                 -var aws_region=${awsRegion} \\
@@ -45,7 +45,7 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     try {
         sh """
         cd ${folder}
-        export AWS_PROFILE=default
+        export AWS_PROFILE=Default
         terraform apply --auto-approve \\
             "${appFolder}.tfplan"      \\
             -var aws_region=${awsRegion} \\
