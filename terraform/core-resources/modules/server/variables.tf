@@ -11,7 +11,7 @@ variable "zone2" {
 }
 
 variable "amis" {
-  type    = map
+  type    = map(string)
   default = {
     us-east-1 = "ami-0947d2ba12ee1ff75"
     us-east-2 = "ami-03657b56516ab7912"
@@ -26,6 +26,6 @@ variable "project" {
   type = string
 }
 
-variable "env" {
+variable "system-environment" {
   type = string
 }

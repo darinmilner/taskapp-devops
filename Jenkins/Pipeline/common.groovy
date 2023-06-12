@@ -3,7 +3,7 @@ String getRegionShortName(String region) {
 }
 
 String getBucketName(String awsRegion) {
-    String bucketName = "taskapi-storage-bucket-"
+    String bucketName = env.BUCKET_PREFIX
     switch (awsRegion) {
         case "us-west-1":
             bucketName += getRegionShortName(awsRegion)
@@ -23,7 +23,7 @@ String getBucketName(String awsRegion) {
 }
 
 String getDynamoDBStateTableName(String awsRegion) {
-    String tableName = "state-lock-table-"
+    String tableName = env.DYANAMO_TABLE_PREFIX
     switch (awsRegion) {
         case "us-west-1":
             tableName += getRegionShortName(awsRegion)

@@ -32,7 +32,7 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             terraform plan -no-color \\
                 -out ${appFolder}.tfplan \\
                 -var aws_region=${awsRegion} \\
-                -var env=${cloudEnv} 
+                -var system_environment=${cloudEnv} 
         """
     } catch (Exception err) {
         returnError(err, "Terraform plan failed")
@@ -49,7 +49,7 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
         terraform apply --auto-approve \\
             "${appFolder}.tfplan"      \\
             -var aws_region=${awsRegion} \\
-            -var env=${cloudEnv} 
+            -var system_environment=${cloudEnv} 
         """
     } catch (Exception err) {
         returnError(err, "terraform apply failed. Please check your Terraform code.")

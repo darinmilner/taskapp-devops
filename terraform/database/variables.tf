@@ -48,10 +48,8 @@ variable "dbpassword" {
   description = "DB Password"
 }
 
-variable "env" {
-  type        = string
-  description = "Environment name"
-  default     = "dev"
+variable "system-environment" {
+  type = string
 }
 
 variable "project" {

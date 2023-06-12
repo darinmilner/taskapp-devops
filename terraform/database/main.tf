@@ -22,7 +22,7 @@ resource "aws_db_security_group" "db-sg" {
 }
 
 resource "aws_db_instance" "task-db" {
-  identifier           = "main-db"
+  identifier           = "${var.system-environment}-main-db"
   db_name              = var.db-name
   storage_encrypted    = true
   kms_key_id           = aws_kms_key.task-db-key.arn

@@ -60,3 +60,7 @@ variable "zone2" {
 variable "common-tags" {
   type = map(string)
 }
+
+variable "system-environment" {
+  type = string
+}

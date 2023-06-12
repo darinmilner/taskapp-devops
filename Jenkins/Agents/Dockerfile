@@ -23,3 +23,4 @@ RUN ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
 RUN echo which aws
 
+RUN rm -f awscli-bundle.zip

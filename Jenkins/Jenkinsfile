@@ -21,10 +21,8 @@ pipeline {
     }
 
     environment {
-        String API_UPLOAD_BUCKET = "api-bucket"
-        String API_BUCKET_KEY = "api"
-        String TERRAFORM_VERSION = "1.4.6"
-        String GRADLE_VERSION = "8.1.1"
+        String BUCKET_PREFIX = "taskapi-storage-bucket-"
+        String DYNAMO_TABLE_PREFIX = "state-lock-table-"
     }
 
     parameters {
@@ -100,7 +98,7 @@ pipeline {
          stage("Push API to S3") {
              when {
                 expression {
-                    return appFolder != "lambdas"
+                    return appFolder == "test" || pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
                 }
             }
             steps {
@@ -147,6 +145,7 @@ pipeline {
 
             steps {
                 script {
+                    storageLib.pushTerraformPlanToS3(bucketName, appFolder)
                     terraformLib.terraformApply(appFolder, awsRegion, cloudEnv)
                 }
             }

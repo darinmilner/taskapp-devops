@@ -25,6 +25,21 @@ def zipAndPushAPIToS3(String bucketName) {
     }
 }
 
+
+def pushTerraformPlanToS3(String bucketName, String appFolder) {
+    String versionNumber = getReleaseVersion()
+    try {
+        echo "Pushing terraform to $bucketName"
+        sh """
+            aws s3 sync terraform/${appFolder}/${appFolder}.tfplan s3://${bucketName}/${versionNumber}/${appFolder}/terraform-plans/${appFolder}.tfplan  --profile Default
+        """
+    } catch (Exception err) {
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting! $err"
+        errorLib.throwError(err, "Error pushing code to S3 bucket $err")
+    }
+}
+
 String getReleaseVersion() {
     def gitCommit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
     String versionNumber

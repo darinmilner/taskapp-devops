@@ -1,5 +1,5 @@
 locals {
-  name-prefix = format("%s-%s", var.project, var.env)
+  name-prefix = format("%s-%s", var.project, var.system-environment)
 }
 
 resource "aws_instance" "server" {
@@ -10,7 +10,7 @@ resource "aws_instance" "server" {
   availability_zone      = var.zone1
 
   tags = {
-    Name    = "API-Server"
+    Name    = "${local.name-prefix}-API-Server"
     Project = "Task-API"
   }
 }
