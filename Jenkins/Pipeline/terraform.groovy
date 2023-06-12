@@ -14,8 +14,9 @@ def terraformInit(String backendBucket, String appFolder, String cloudEnv, Strin
             -backend-config="dynamodb_table=${stateTable}"
         """
     } catch (err) {
-        returnError(err, "Terraform init failed")
-        throw err
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting! $err"
+        errorLib.throwError(err, "Terraform init failed $err")
     }
 }
 
@@ -35,8 +36,9 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
                 -var system_environment=${cloudEnv} 
         """
     } catch (Exception err) {
-        returnError(err, "Terraform plan failed")
-        throw err
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting! $err"
+        errorLib.throwError(err, "Terraform plan failed $err")
     }
 }
 
@@ -52,11 +54,11 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
             -var system_environment=${cloudEnv} 
         """
     } catch (Exception err) {
-        returnError(err, "terraform apply failed. Please check your Terraform code.")
-        throw err
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting! $err"
+        errorLib.throwError(err, "Terraform Apply failed $err")
     }
 }
-
 
 def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
     String folder = getTerraformAppFolder(appFolder)
@@ -69,14 +71,10 @@ def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
             -var env=${cloudEnv} 
         """
     } catch (Exception err) {
-        returnError(err, "terraform apply failed. Please check your Terraform code.")
-        throw err
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting! $err"
+        errorLib.throwError(err, "Terraform destroy failed $err")
     }
-}
-
-def returnError(err, message) {
-    echo "$message Error: $err"
-    echo err.getMessage()
 }
 
 String getTerraformAppFolder(String appFolder) {

@@ -1,6 +1,6 @@
 FROM gradle:8.1.1-jdk17-alpine
 
-ARG TERRAFORM_VERSION=1.4.6
+ARG TERRAFORM_VERSION=1.5.0
 
 RUN apk add curl
 

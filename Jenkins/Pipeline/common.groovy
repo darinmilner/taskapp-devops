@@ -23,7 +23,7 @@ String getBucketName(String awsRegion) {
 }
 
 String getDynamoDBStateTableName(String awsRegion) {
-    String tableName = env.DYANAMO_TABLE_PREFIX
+    String tableName = env.DYNAMO_TABLE_PREFIX
     switch (awsRegion) {
         case "us-west-1":
             tableName += getRegionShortName(awsRegion)
