@@ -18,10 +18,10 @@ resource "aws_s3_bucket_acl" "bucket-acl" {
 resource "aws_dynamodb_table" "state-lock-table" {
   name         = "state-lock-table-${local.short_region}"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockId"
+  hash_key     = "LockID"
 
   attribute {
-    name = "LockId"
+    name = "LockID"
     type = "S"
   }
 }

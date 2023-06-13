@@ -32,8 +32,8 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             export AWS_PROFILE=Default
             terraform plan -no-color \\
                 -out ${appFolder}.tfplan \\
-                -var aws_region=${awsRegion} \\
-                -var system_environment=${cloudEnv} 
+                -var aws-region=${awsRegion} \\
+                -var system-environment=${cloudEnv} 
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -50,8 +50,8 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
         export AWS_PROFILE=Default
         terraform apply --auto-approve \\
             "${appFolder}.tfplan"      \\
-            -var aws_region=${awsRegion} \\
-            -var system_environment=${cloudEnv} 
+            -var aws-region=${awsRegion} \\
+            -var system-environment=${cloudEnv} 
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -67,8 +67,8 @@ def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
         cd ${folder}
         export AWS_PROFILE=default
         terraform destroy --auto-approve \\
-            -var aws_region=${awsRegion} \\
-            -var env=${cloudEnv} 
+            -var aws-region=${awsRegion} \\
+            -var system-environment=${cloudEnv} 
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
