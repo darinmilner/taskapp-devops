@@ -12,6 +12,7 @@ locals {
   tcp-protocol  = "tcp"
   all-protocols = "-1"
   open_cidr     = "0.0.0.0/0"
+  region        = replace(var.aws-region, "-", "" )
 
   common-tags = {
     Env       = var.system-environment

@@ -28,3 +28,9 @@ module "server" {
   project            = var.project
   system-environment = var.system-environment
 }
+
+module "storage" {
+  source             = "./modules/storage"
+  bucket-name        = "core-bucket-${local.region}"
+  system-environment = var.system-environment
+}

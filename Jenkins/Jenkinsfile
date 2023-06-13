@@ -27,7 +27,7 @@ pipeline {
 
     parameters {
         choice(name: "APP_FOLDER", choices: ["core-resources", "lambdas", "database", "api"], description: "Folder where pipeline actions should run")
-        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
+        choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "build-and-deploy-api", "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
         choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1", "ap-southeast-3"], description: "AWS Region to deploy resources and app")
     }
@@ -98,7 +98,7 @@ pipeline {
          stage("Push API to S3") {
              when {
                 expression {
-                    return appFolder == "test" || pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
+                    return pipelineAction == "test" || pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
                 }
             }
             steps {

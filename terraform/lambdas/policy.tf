@@ -1,5 +1,5 @@
-resource "aws_iam_policy" "salambda-policy" {
-  name        = "salambda-policy"
+resource "aws_iam_policy" "api-lambda-policy" {
+  name        = "taskapp-api-lambda-policy"
   description = "Allows Lambda to call AWS services on your behalf."
   policy      = <<EOF
 {
@@ -32,8 +32,8 @@ EOF
 }
 
 
-resource "aws_iam_role" "salambda-role" {
-  name               = "lambda-role"
+resource "aws_iam_role" "api-lambda-role" {
+  name               = "taskapp-api-lambda-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -52,7 +52,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-policy-attachment" {
-  role       = aws_iam_role.salambda-role.name
-  policy_arn = aws_iam_policy.salambda-policy.arn
-  depends_on = [aws_iam_role.salambda-role, aws_iam_policy.salambda-policy]
+  role       = aws_iam_role.api-lambda-role.name
+  policy_arn = aws_iam_policy.api-lambda-policy.arn
+  depends_on = [aws_iam_role.api-lambda-role, aws_iam_policy.api-lambda-policy]
 }
