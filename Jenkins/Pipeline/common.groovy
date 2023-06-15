@@ -57,7 +57,6 @@ def configureAWSProfile(String awsRegion) {
         sh """
             aws configure set region ${awsRegion} --profile Default
             aws configure set output "json" --profile Default
-            aws sts get-caller-identity
         """
 
     } catch (Exception err) {
