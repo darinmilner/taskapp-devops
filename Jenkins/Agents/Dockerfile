@@ -15,12 +15,16 @@ RUN echo terraform --version
 
 RUN rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
-RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN  ./aws/install
 
-RUN unzip awscli-bundle.zip
-
-RUN ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+#RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+#
+#RUN unzip awscli-bundle.zip
+#
+#RUN ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 
 RUN echo which aws
 
-RUN rm -f awscli-bundle.zip
+RUN rm -f awscliv2.zip
