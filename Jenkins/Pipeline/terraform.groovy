@@ -26,14 +26,15 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
     echo "Running terraform plan in folder $folder"
     try {
         sh """
+            export AWS_PROFILE=Default
             cd ${folder}
             terraform fmt
-            terraform validate -no-color
-            export AWS_PROFILE=Default
+            terraform validate -no-color    
             terraform plan -no-color \\
                 -out ${appFolder}.tfplan \\
                 -var aws-region=${awsRegion} \\
-                -var system-environment=${cloudEnv} 
+                -var system-environment=${cloudEnv} \\
+                --auto-approve 
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -46,12 +47,13 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     String folder = getTerraformAppFolder(appFolder)
     try {
         sh """
-        cd ${folder}
         export AWS_PROFILE=Default
-        terraform apply --auto-approve \\
+        cd ${folder}
+        terraform apply  \\
             "${appFolder}.tfplan"      \\
             -var aws-region=${awsRegion} \\
-            -var system-environment=${cloudEnv} 
+            -var system-environment=${cloudEnv}  \\
+            --auto-approve
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -64,11 +66,12 @@ def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
     String folder = getTerraformAppFolder(appFolder)
     try {
         sh """
+        export AWS_PROFILE=Default
         cd ${folder}
-        export AWS_PROFILE=default
-        terraform destroy --auto-approve \\
+        terraform destroy  \\
             -var aws-region=${awsRegion} \\
-            -var system-environment=${cloudEnv} 
+            -var system-environment=${cloudEnv} \\
+            --auto-approve
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
