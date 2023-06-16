@@ -33,8 +33,7 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             terraform plan -no-color \\
                 -out ${appFolder}.tfplan \\
                 -var aws-region=${awsRegion} \\
-                -var system-environment=${cloudEnv} \\
-                -auto-approve 
+                -var system-environment=${cloudEnv} 
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
