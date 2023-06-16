@@ -41,7 +41,7 @@ def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
         echo "Pushing API code to $bucketName"
         sh """
             aws configure set region ${awsRegion} --profile Default
-            aws s3 sync src/resources/application-prod.yml ${bucketName}/application-prod.yaml  --profile Default
+            aws s3 sync src/resources/application-prod.yaml s3://${bucketName}/application-prod.yaml  --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
