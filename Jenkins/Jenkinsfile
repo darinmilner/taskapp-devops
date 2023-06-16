@@ -165,7 +165,7 @@ pipeline {
                 script {
                     if (cloudEnv == "prod") {
                         echo "Change ticket $ticket"
-                        if (changeTicket == null || changeTicket == "") {
+                        if (ticket == null || ticket == "") {
                             throw new Exception("Change Ticket can not be empty when applying to production.")
                         }
                         storageLib.pushTerraformPlanToS3(bucketName, appFolder, ticket)
