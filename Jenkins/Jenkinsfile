@@ -6,12 +6,14 @@ def lambdasLib = evaluate readTrusted("Jenkins/Pipeline/lambdas.groovy")
 def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
 def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
 def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
+def changeTicketLib = evaluate readTrusted("Jenkins/Pipeline/changeTicket.groovy")
 String appFolder
 String backendBucket
 String awsRegion
 String pipelineAction
 String stateTable
 String cloudEnv
+String ticket
 
 pipeline {
     agent {
@@ -136,7 +138,23 @@ pipeline {
             }
         }
 
-         stage("Apply") {
+        stage("Submit change ticket"){
+            when {
+                expression {
+                    return cloudEnv == "prod"
+                }
+            }
+
+            steps {
+                script {
+                    timeout(time: 15, unit: "MINUTES") {
+                        ticket = changeTicketLib.submitChangeTicket()
+                    }
+                }
+            }
+        }
+
+        stage("Apply") {
             when {
                 expression {
                     return pipelineAction == "apply"
@@ -145,7 +163,16 @@ pipeline {
 
             steps {
                 script {
-                    storageLib.pushTerraformPlanToS3(bucketName, appFolder)
+                    if (cloudEnv == "prod") {
+                        echo "Change ticket $ticket"
+                        if (changeTicket == null || changeTicket == "") {
+                            throw new Exception("Change Ticket can not be empty when applying to production.")
+                        }
+                        storageLib.pushTerraformPlanToS3(bucketName, appFolder, ticket)
+                    } else {
+                        storageLib.pushTerraformPlanToS3(bucketName, appFolder)
+                    }
+
                     terraformLib.terraformApply(appFolder, awsRegion, cloudEnv)
                 }
             }
@@ -174,6 +201,16 @@ pipeline {
 
             steps {
                 script {
+                     if (cloudEnv == "prod") {
+                        echo "Change ticket $ticket"
+                        if (changeTicket == null || changeTicket == "") {
+                            throw new Exception("Change Ticket can not be empty when applying to production.")
+                        }
+                    }
+
+                    if (awsRegion != "us-east-1") {
+                        storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
+                    }
                     storageLib.getAPIEnvFile(backendBucket)
                     commonLib.buildKotlinEnvironment()
                 }

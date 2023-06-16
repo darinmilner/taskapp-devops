@@ -8,7 +8,7 @@ resource "aws_db_subnet_group" "db-main" {
   subnet_ids = [var.private-subnets[0], var.private-subnets[1]]
 }
 
-resource "aws_db_security_group" "db-sg" {
+resource "aws_security_group" "db-sg" {
   name        = "database-security-group"
   description = "Allow access to RDS Postgres DB"
   vpc_id      = data.aws_vpc.main.id
@@ -40,7 +40,7 @@ resource "aws_db_instance" "task-db" {
   backup_retention_period = var.backup-days
   multi_az                = false // TODO: true for production
   skip_final_snapshot     = true //TODO:  false for production
-  vpc_security_group_ids  = [aws_db_security_group.db-sg.id]
+  vpc_security_group_ids  = [aws_security_group.db-sg.id]
   maintenance_window      = "Mon:00:00-Mon:03:00"
   backup_window           = "03:00-06:00"
 }

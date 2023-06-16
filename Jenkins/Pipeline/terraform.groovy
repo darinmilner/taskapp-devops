@@ -34,7 +34,7 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
                 -out ${appFolder}.tfplan \\
                 -var aws-region=${awsRegion} \\
                 -var system-environment=${cloudEnv} \\
-                --auto-approve 
+                -auto-approve 
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -53,7 +53,7 @@ def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
             "${appFolder}.tfplan"      \\
             -var aws-region=${awsRegion} \\
             -var system-environment=${cloudEnv}  \\
-            --auto-approve
+            -auto-approve
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -71,7 +71,7 @@ def terraformDestroy(String appFolder, String awsRegion, String cloudEnv) {
         terraform destroy  \\
             -var aws-region=${awsRegion} \\
             -var system-environment=${cloudEnv} \\
-            --auto-approve
+            -auto-approve
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")

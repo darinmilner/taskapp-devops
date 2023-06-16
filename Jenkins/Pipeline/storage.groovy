@@ -1,3 +1,28 @@
+def getAPIEnvFileFromUSEast1Bucket(String awsRegion) {
+    try {
+        echo "Getting application file from us-east-1 s3 bucket"
+        sh """
+            aws configure set region us-east-1 --profile Default
+            aws s3 cp s3://task-storage-bucket-useast1/application-prod.yaml src/resources/application-prod.yaml --profile Default
+        """
+    } catch (Exception err) {
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting $err!"
+        errorLib.throwError(err, "Error getting file from us-east-1 s3 bucket $err")
+    }
+
+    if (awsRegion != "us-east-1") {
+        try {
+            String region = awsRegion.replace("-", "")
+            copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion)
+        } catch (Exception err) {
+            def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+            echo "Pipeline is exiting $err!"
+            errorLib.throwError(err, "Error copying env file to $awsRegion bucket $err")
+        }
+    }
+}
+
 def getAPIEnvFile(String bucketName) {
     try {
         echo "Getting application file from s3 bucket $bucketName"
@@ -10,6 +35,21 @@ def getAPIEnvFile(String bucketName) {
         errorLib.throwError(err, "Error getting file from s3 bucket $err")
     }
 }
+
+def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
+    try {
+        echo "Pushing API code to $bucketName"
+        sh """
+            aws configure set region ${awsRegion} --profile Default
+            aws s3 sync src/resources/application-prod.yml ${bucketName}/application-prod.yaml  --profile Default
+        """
+    } catch (Exception err) {
+        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+        echo "Pipeline is exiting! $err"
+        errorLib.throwError(err, "Error pushing code to S3 bucket $err")
+    }
+}
+
 
 def zipAndPushAPIToS3(String bucketName) {
     String versionNumber = getReleaseVersion()
@@ -26,10 +66,14 @@ def zipAndPushAPIToS3(String bucketName) {
 }
 
 
-def pushTerraformPlanToS3(String bucketName, String appFolder) {
+def pushTerraformPlanToS3(String bucketName, String appFolder, String changeTicket = null) {
     String versionNumber = getReleaseVersion()
+    if (changeTicket == null) {
+        versionNumber += "-${changeTicket}"
+    }
+
     try {
-        echo "Pushing terraform to $bucketName"
+        echo "Pushing terraform plan version number ${versionNumber} to $bucketName"
         sh """
             aws s3 sync terraform/${appFolder}/${appFolder}.tfplan s3://${bucketName}/${versionNumber}/${appFolder}/terraform-plans/${appFolder}.tfplan  --profile Default
         """
