@@ -12,14 +12,8 @@ def getAPIEnvFileFromUSEast1Bucket(String awsRegion) {
     }
 
     if (awsRegion != "us-east-1") {
-        try {
-            String region = awsRegion.replace("-", "")
-            copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion)
-        } catch (Exception err) {
-            def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-            echo "Pipeline is exiting $err!"
-            errorLib.throwError(err, "Error copying env file to $awsRegion bucket $err")
-        }
+        String region = awsRegion.replace("-", "")
+        copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion)
     }
 }
 
@@ -38,10 +32,15 @@ def getAPIEnvFile(String bucketName) {
 
 def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
     try {
+        sh """
+            pwd
+            ls -la
+            cd src/
+        """
         echo "Pushing API code to $bucketName"
         sh """
             aws configure set region ${awsRegion} --profile Default
-            aws s3 sync src/resources/application-prod.yaml s3://${bucketName}/application-prod.yaml  --profile Default
+            aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/application-prod.yaml  --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
