@@ -123,21 +123,6 @@ pipeline {
             }
         }
 
-        stage("Init and Plan") {
-            when {
-                expression {
-                    return pipelineAction != "test" || pipelineAction != "deploy-api" || appFolder != "src"
-                }
-            }
-
-            steps {
-                script {
-                    terraformLib.terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable)
-                    terraformLib.terraformPlan(appFolder, awsRegion, cloudEnv)
-                }
-            }
-        }
-
         stage("Submit change ticket"){
             when {
                 expression {
@@ -150,6 +135,21 @@ pipeline {
                     timeout(time: 15, unit: "MINUTES") {
                         ticket = changeTicketLib.submitChangeTicket()
                     }
+                }
+            }
+        }
+
+        stage("Init and Plan") {
+            when {
+                expression {
+                    return pipelineAction != "test" || pipelineAction != "deploy-api" || appFolder != "src"
+                }
+            }
+
+            steps {
+                script {
+                    terraformLib.terraformInit(backendBucket, appFolder, cloudEnv, awsRegion, stateTable)
+                    terraformLib.terraformPlan(appFolder, awsRegion, cloudEnv)
                 }
             }
         }
