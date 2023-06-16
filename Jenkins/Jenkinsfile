@@ -142,7 +142,7 @@ pipeline {
         stage("Init and Plan") {
             when {
                 expression {
-                    return pipelineAction != "test" || pipelineAction != "deploy-api" || appFolder != "src"
+                    return pipelineAction != "test" && pipelineAction != "deploy-api" && appFolder != "src"
                 }
             }
 
