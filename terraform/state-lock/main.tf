@@ -1,5 +1,7 @@
 provider "aws" {
   region = var.aws-region
+  access_key = var.access-key
+    secret_key = var.secret-key
 }
 
 locals {
@@ -7,13 +9,13 @@ locals {
 }
 
 resource "aws_s3_bucket" "storage-bucket" {
-  bucket = "taskapi-storage-bucket-${var.aws-region}"
+  bucket = "taskapi-storage-bucket-${local.short_region}"
 }
 
-resource "aws_s3_bucket_acl" "bucket-acl" {
-  bucket = aws_s3_bucket.storage-bucket.bucket
-  acl    = "private-read"
-}
+#resource "aws_s3_bucket_acl" "bucket-acl" {
+#  bucket = aws_s3_bucket.storage-bucket.bucket
+#  acl    = "public-read"
+#}
 
 resource "aws_dynamodb_table" "state-lock-table" {
   name         = "state-lock-table-${local.short_region}"

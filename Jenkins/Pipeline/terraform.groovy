@@ -32,7 +32,7 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
             terraform fmt
             terraform validate -no-color    
             terraform plan -no-color \\
-                 -out ${appFolder}.tfplan \\\\
+                 -out ${appFolder}.tfplan \\
                 -var aws-region=${awsRegion} \\
                 -var system-environment=${cloudEnv} \\
                 -var access-key=${ACCESSKEY} \\
