@@ -5,10 +5,8 @@ variable "aws-region" {
 
 variable "access-key" {
   type    = string
-  default = "access-key"
 }
 
 variable "secret-key" {
   type = string
-  default = "secret-key"
 }

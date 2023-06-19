@@ -10,3 +10,11 @@ variable "project" {
   type    = string
   default = "Task-API"
 }
+
+variable "access-key" {
+  type    = string
+}
+
+variable "secret-key" {
+  type = string
+}
