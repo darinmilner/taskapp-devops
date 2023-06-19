@@ -1,4 +1,4 @@
-#!groovy
+#! groovy
 
 def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
 def terraformLib = evaluate readTrusted("Jenkins/Pipeline/terraform.groovy")
@@ -212,7 +212,7 @@ pipeline {
                         storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
                     }
                     storageLib.getAPIEnvFile(backendBucket)
-                    commonLib.buildKotlinEnvironment()
+                    buildAPILib.buildKotlinEnvironment()
                 }
             }
         }

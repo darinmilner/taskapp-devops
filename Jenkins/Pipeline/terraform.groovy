@@ -25,16 +25,20 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
 
     echo "Running terraform plan in folder $folder"
     try {
-        sh """
+        withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
+            sh """
             export AWS_PROFILE=Default
             cd ${folder}
             terraform fmt
             terraform validate -no-color    
             terraform plan -no-color \\
-                -out ${appFolder}.tfplan \\
+                 -out ${appFolder}.tfplan \\\\
                 -var aws-region=${awsRegion} \\
-                -var system-environment=${cloudEnv} 
+                -var system-environment=${cloudEnv} \\
+                -var access-key=${ACCESSKEY} \\
+                -var secret-key=${SECRETKEY}
         """
+        }
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
         echo "Pipeline is exiting! $err"

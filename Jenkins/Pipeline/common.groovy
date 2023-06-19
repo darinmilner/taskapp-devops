@@ -45,11 +45,16 @@ String getDynamoDBStateTableName(String awsRegion) {
 def configureAWSProfile(String awsRegion) {
     echo "Configuring AWS Profile"
 
-    withCredentials([string(credentialsId: "accessId", variable: "ACCESSKEY")]) {
-        sh 'aws configure set aws_access_key_id $ACCESSKEY --profile Default'
-    }
+//    withCredentials([string(credentialsId: "accessId", variable: "ACCESSKEY")]) {
+//        sh 'aws configure set aws_access_key_id $ACCESSKEY --profile Default'
+//    }
+//
+//    withCredentials([string(credentialsId: "secretId", variable: "SECRETKEY")]) {
+//        sh 'aws configure set aws_secret_access_key $SECRETKEY --profile Default'
+//    }
 
-    withCredentials([string(credentialsId: "secretId", variable: "SECRETKEY")]) {
+    withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
+        sh 'aws configure set aws_access_key_id $ACCESSKEY --profile Default'
         sh 'aws configure set aws_secret_access_key $SECRETKEY --profile Default'
     }
 

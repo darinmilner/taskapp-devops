@@ -32,11 +32,6 @@ def getAPIEnvFile(String bucketName) {
 
 def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
     try {
-        sh """
-            pwd
-            ls -la
-            cd src/
-        """
         echo "Pushing API code to $bucketName"
         sh """
             aws configure set region ${awsRegion} --profile Default
