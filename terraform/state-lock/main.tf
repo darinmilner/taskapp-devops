@@ -1,7 +1,7 @@
 provider "aws" {
-  region = var.aws-region
+  region     = var.aws-region
   access_key = var.access-key
-    secret_key = var.secret-key
+  secret_key = var.secret-key
 }
 
 locals {
@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "storage-bucket" {
 #  acl    = "public-read"
 #}
 
-resource "aws_dynamodb_table" "state-lock-table" {
+resource "aws_dynamodb_table" "state-table" {
   name         = "state-lock-table-${local.short_region}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"

@@ -3,7 +3,7 @@ def getAPIEnvFileFromUSEast1Bucket(String awsRegion) {
         echo "Getting application file from us-east-1 s3 bucket"
         sh """
             aws configure set region us-east-1 --profile Default
-            aws s3 cp s3://taskapi-storage-useast1/application-prod.yaml src/resources/application-prod.yaml --profile Default
+            aws s3 cp s3://taskapi-storage-bucket-useast1/application-prod.yaml src/resources/application-prod.yaml --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
