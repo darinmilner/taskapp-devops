@@ -27,8 +27,9 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
     try {
         withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
             sh """
-            export AWS_PROFILE=Default
             cd ${folder}
+            export AWS_PROFILE=Default
+            aws sts get-caller-identity
             terraform fmt
             terraform validate -no-color    
             terraform plan -no-color \\
