@@ -49,15 +49,19 @@ def terraformPlan(String appFolder, String cloudEnv, String awsRegion) {
 def terraformApply(String appFolder, String awsRegion, String cloudEnv) {
     String folder = getTerraformAppFolder(appFolder)
     try {
-        sh """
-        export AWS_PROFILE=Default
-        cd ${folder}
-        terraform apply  \\
-            "${appFolder}.tfplan"      \\
-            -var aws-region=${awsRegion} \\
-            -var system-environment=${cloudEnv}  \\
-            -auto-approve
-        """
+        withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
+            sh """
+                export AWS_PROFILE=Default
+                cd ${folder}
+                terraform apply  \\
+                    "${appFolder}.tfplan"      \\
+                    -var aws-region=${awsRegion} \\
+                    -var system-environment=${cloudEnv}  \\
+                    -var access-key=${ACCESSKEY} \\
+                    -var secret-key=${SECRETKEY} \\
+                    -auto-approve
+            """
+        }
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
         echo "Pipeline is exiting! $err"
