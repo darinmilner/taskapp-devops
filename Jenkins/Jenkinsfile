@@ -7,6 +7,8 @@ def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
 def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
 def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
 def changeTicketLib = evaluate readTrusted("Jenkins/Pipeline/changeTicket.groovy")
+// TODO: add codedeploy file
+
 String appFolder
 String backendBucket
 String awsRegion
@@ -28,7 +30,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: "APP_FOLDER", choices: ["core-resources", "lambdas", "database", "api"], description: "Folder where pipeline actions should run")
+        choice(name: "APP_FOLDER", choices: ["core-resources", "lambdas", "database", "api", "codedeploy"], description: "Folder where pipeline actions should run")
         choice(name: "PIPELINE_ACTION", choices: ["test", "lambdas", "deploy-api", "build-and-deploy-api", "init-and-plan", "apply", "destroy"], description: "Pipeline deploy action")
         choice(name: "CLOUD_ENVIRONMENT", choices: ["dev", "test", "prod"], description: "Deployment cloud environment")
         choice(name: "AWS_REGION", choices: ["us-east-1", "us-east-2", "us-west-1", "ap-southeast-3"], description: "AWS Region to deploy resources and app")

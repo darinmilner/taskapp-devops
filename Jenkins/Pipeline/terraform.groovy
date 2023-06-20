@@ -100,7 +100,10 @@ String getTerraformAppFolder(String appFolder) {
             appFolder = "terraform/core-resources"
             break
         case "api":
-            appFolder = "src"
+            appFolder = "terraform/codedeploy"
+            break
+        case "codedeploy":
+            appFolder = "terraform/codedeploy"
             break
         default:
             throw new Exception("Invalid or unsupported app folder $appFolder")

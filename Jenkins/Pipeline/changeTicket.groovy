@@ -9,6 +9,7 @@ String submitChangeTicket() {
     }
 
     boolean isValid = validateChangeTicket(changeTicket)
+    //TODO: change to try catch and throw an exception for invalid change ticket
     if (isValid) {
         echo "Change ticket is valid"
     } else {
@@ -19,7 +20,10 @@ String submitChangeTicket() {
 }
 
 boolean validateChangeTicket(String changeTicket) {
-    boolean isValid = changeTicket.startsWith("CH")
+    Date now = new Date()
+    def thisYear = now["year"]
+    echo "$thisYear"
+    boolean isValid = changeTicket.startsWith("CH") && changeTicket.contains(thisYear)
     return isValid
 }
 

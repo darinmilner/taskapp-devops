@@ -11,7 +11,7 @@ resource "aws_instance" "server" {
 
   tags = {
     Name    = "${local.name-prefix}-API-Server"
-    Project = "Task-API"
+    Project = var.project
   }
 }
 
