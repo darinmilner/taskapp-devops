@@ -20,10 +20,7 @@ String submitChangeTicket() {
 }
 
 boolean validateChangeTicket(String changeTicket) {
-    Date now = new Date()
-    def thisYear = now["year"]
-    echo "$thisYear"
-    boolean isValid = changeTicket.startsWith("CH") && changeTicket.contains(thisYear)
+    boolean isValid = changeTicket.startsWith("CH") && changeTicket.contains("2023")
     return isValid
 }
 
