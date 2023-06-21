@@ -52,6 +52,7 @@ def zipAndPushAPIToS3(String bucketName) {
         echo "Pushing API code to $bucketName"
         sh """
             zip -r ${zipFileName}.zip src/
+            ls -la
             aws s3 sync ${zipFileName}.zip s3://${bucketName}/api/${versionNumber}/  --profile Default
         """
     } catch (Exception err) {
