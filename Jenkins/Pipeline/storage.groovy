@@ -53,7 +53,7 @@ def zipAndPushAPIToS3(String bucketName) {
         sh """
             zip -r ${zipFileName}.zip src/
             ls -la
-            aws s3 sync ${zipFileName}.zip s3://${bucketName}/api/${versionNumber}/  --profile Default
+            aws s3 cp ${WORKSPACE}/${zipFileName}.zip s3://${bucketName}/api/${versionNumber}/  --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
