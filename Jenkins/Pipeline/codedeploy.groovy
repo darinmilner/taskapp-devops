@@ -6,7 +6,7 @@ def startCodeDeploy(String bucket, String awsRegion) {
     sh """
         aws deploy create-deployment --application-name UserServiceAPI \\
             --s3-location bucket=${bucket},key=api/${versionNumber}/user-api-${versionNumber},bundleType=zip \\
-            --deployment-group-name ${groupName}
+            --deployment-group-name ${groupName} --profile Default
     """
 //    --deployment-config-name CodeDeployDefault.OneAtATime \\
 //            --description UserAPICopeDeploy  --Profile Default
