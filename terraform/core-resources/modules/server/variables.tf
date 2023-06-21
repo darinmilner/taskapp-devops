@@ -29,3 +29,7 @@ variable "project" {
 variable "system-environment" {
   type = string
 }
+
+variable "subnet-id" {
+  type = string
+}

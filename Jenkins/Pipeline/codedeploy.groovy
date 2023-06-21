@@ -5,10 +5,11 @@ def startCodeDeploy(String bucket, String awsRegion) {
     echo "Starting api deployment to $groupName"
     sh """
         aws deploy create-deployment --application-name UserServiceAPI \\
-            --s3-location ${bucket}/api/${versionNumber}/user-api-${versionNumber} \\
-            --deployment-config-name CodeDeployDefault.OneAtATime \\
-            --description UserAPICopeDeploy  --Profile Default
+            --s3-location bucket=${bucket},key=api/${versionNumber}/user-api-${versionNumber},bundleType=zip \\
+            --deployment-group-name ${groupName}
     """
+//    --deployment-config-name CodeDeployDefault.OneAtATime \\
+//            --description UserAPICopeDeploy  --Profile Default
 }
 
 String getCodeDeployGroup(String awsRegion) {

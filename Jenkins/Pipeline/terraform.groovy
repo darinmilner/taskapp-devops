@@ -5,6 +5,7 @@ def terraformInit(String backendBucket, String appFolder, String cloudEnv, Strin
 
     try {
         sh """
+            export AWS_PROFILE=Default
             cd ${folder}
             terraform init -no-color \\
             -backend-config="bucket=${backendBucket}" \\

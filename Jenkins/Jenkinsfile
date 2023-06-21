@@ -7,7 +7,7 @@ def buildAPILib = evaluate readTrusted("Jenkins/Pipeline/buildAPI.groovy")
 def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
 def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
 def changeTicketLib = evaluate readTrusted("Jenkins/Pipeline/changeTicket.groovy")
-// TODO: add codedeploy file
+def codedeployLib = evaluate readTrusted("Jenkins/Pipeline/codedeploy.groovy")
 
 String appFolder
 String backendBucket
@@ -214,7 +214,7 @@ pipeline {
                         storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
                     }
                     storageLib.getAPIEnvFile(backendBucket)
-                    buildAPILib.buildKotlinEnvironment()
+                    codedeployLib.startCodeDeploy(backendBucket, awsRegion)
                 }
             }
         }

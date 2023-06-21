@@ -8,6 +8,10 @@ resource "aws_instance" "server" {
   key_name               = "terraform"
   vpc_security_group_ids = [var.server-sg]
   availability_zone      = var.zone1
+  subnet_id              = var.subnet-id
+  iam_instance_profile   = aws_iam_instance_profile.ec2-instance-profile.arn
+
+  user_data = file("${path.module}/install-codedeploy-agent.sh")
 
   tags = {
     Name    = "${local.name-prefix}-API-Server"
