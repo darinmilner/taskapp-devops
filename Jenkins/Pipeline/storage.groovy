@@ -47,10 +47,12 @@ def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
 
 def zipAndPushAPIToS3(String bucketName) {
     String versionNumber = getReleaseVersion()
+    String zipFileName = "user-api-${versionNumber}"
     try {
         echo "Pushing API code to $bucketName"
         sh """
-            aws s3 sync src/ s3://${bucketName}/api/${versionNumber}/  --profile Default
+            zip -r ${zipFileName}.zip src/
+            aws s3 sync ${zipFileName}.zip s3://${bucketName}/api/${versionNumber}/  --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
