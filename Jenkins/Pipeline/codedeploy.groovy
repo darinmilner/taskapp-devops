@@ -34,4 +34,45 @@ String getCodeDeployGroup(String awsRegion) {
     }
 }
 
+//TODO: remove later
+
+String region = "us-west-1"
+
+String getBucketName(String region) {
+    String bucketName = "core-bucket-"
+    switch (region) {
+        case "us-east-1":
+            bucketName += getRegionShortName(region)
+            return bucketName
+        case "us-east-2":
+            bucketName += getRegionShortName(region)
+            return bucketName
+        case "us-west-1":
+            bucketName += getRegionShortName(region)
+            return bucketName
+        default:
+            throw new Exception("Invalid or unsupported region $region")
+    }
+}
+
+List<String> getGroupName(String region) {
+    List environments = ["dev", "test", "prod"]
+    List<String> groups = []
+    switch (region) {
+        case "us-east-1":
+            for (env in environments) {
+                String groupName = getBucketName("us-east-1") + "-$env"
+                println groupName
+                groups.add(groupName)
+            }
+            return groups
+            break
+        default:
+            throw new Exception("Invalid Region")
+    }
+}
+
+List<String> groupName = getGroupName("us-east-1")
+println groupName
+
 return this
