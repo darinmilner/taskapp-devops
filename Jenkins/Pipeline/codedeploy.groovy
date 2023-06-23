@@ -1,3 +1,4 @@
+//TODO: get deplpoyment start scipts from S3
 def startCodeDeploy(String bucket, String awsRegion) {
     def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
     String groupName = getCodeDeployGroup(awsRegion)
