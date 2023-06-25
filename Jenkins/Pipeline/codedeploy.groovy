@@ -13,6 +13,7 @@ def startCodeDeploy(String bucket, String awsRegion, String cloudEnvironment) {
 }
 
 String deployToAllEnvironments(String region) {
+    def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
     List environments = ["dev", "test", "prod"]
     for (env in environments) {
         String groupName = commonLib.getRegionShortName(region) + "-$env"
