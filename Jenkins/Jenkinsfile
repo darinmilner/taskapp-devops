@@ -8,6 +8,7 @@ def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
 def loggerLib = evaluate readTrusted("Jenkins/Pipeline/logger.groovy")
 def changeTicketLib = evaluate readTrusted("Jenkins/Pipeline/changeTicket.groovy")
 def codedeployLib = evaluate readTrusted("Jenkins/Pipeline/codedeploy.groovy")
+def inputLib = evaluate readTrusted("Jenkins/Pipeline/input.groovy")
 
 String appFolder
 String backendBucket
@@ -214,9 +215,17 @@ pipeline {
                         storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
                     }
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
-                    echo "Code Deploy groups in Jenkinsfile $groups"
+
                     storageLib.getAPIEnvFile(backendBucket)
-                    codedeployLib.startCodeDeploy(backendBucket, awsRegion)
+
+                    String message = "Would you like to deploy to all cloud environments?"
+
+                    def input = inputLib.getInput(message, "Deploy to All Regions", message)
+
+                    if (input == "yes") {
+                        echo "Input to all regions"
+                    }
+                    codedeployLib.startCodeDeploy(backendBucket, awsRegion, cloudEnv)
                 }
             }
         }
