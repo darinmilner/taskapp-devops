@@ -49,8 +49,9 @@ List<String> loopThroughCodeDeployGroups(String region) {
     String codeDeployGroupName = "User-Service-API-DeploymentGroup-"
     for (env in environments) {
         String groupName = codeDeployGroupName + commonLib.getRegionShortName(region) + "-$env"
-        println groupName
         groups.add(groupName)
+        // TODO: add codedeploy deploy cli commads
+        echo "Starting api deployment to $groupName"
     }
     return groups
 }

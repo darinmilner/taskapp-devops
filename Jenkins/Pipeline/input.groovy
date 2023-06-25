@@ -1,8 +1,8 @@
-String getInput(String message, String name, String description) {
+String getInput(String message, String name, String description, List<String> choices) {
     def inputMessage = input(
             message: message,
             parameters: [
-                    string(name: name, defaultValue: null, description: description)
+                    string(name: name, choices: choices, description: description)
             ])
     return inputMessage
 }
