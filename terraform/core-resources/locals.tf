@@ -15,6 +15,7 @@ locals {
   region        = replace(var.aws-region, "-", "" )
 
   common-tags = {
+    
     Env       = var.system-environment
     ManagedBy = "Terraform"
     Project   = var.project

@@ -1,7 +1,6 @@
-//TODO: get deplpoyment start scipts from S3
-def startCodeDeploy(String bucket, String awsRegion) {
+def startCodeDeploy(String bucket, String awsRegion, String cloudEnvironment) {
     def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
-    String groupName = getCodeDeployGroup(awsRegion)
+    String groupName = getCodeDeployGroup(awsRegion, cloudEnvironment)
     String versionNumber = storageLib.getReleaseVersion()
     echo "Starting api deployment to $groupName"
     sh """
@@ -13,66 +12,62 @@ def startCodeDeploy(String bucket, String awsRegion) {
 //            --description UserAPICopeDeploy  --Profile Default
 }
 
-String getCodeDeployGroup(String awsRegion) {
+String deployToAllEnvironments(String region) {
+    List environments = ["dev", "test", "prod"]
+    for (env in environments) {
+        String groupName = commonLib.getRegionShortName(region) + "-$env"
+        println groupName
+        echo "Going to deploy to $env"
+    }
+}
+
+String getCodeDeployGroup(String awsRegion, String cloudEnvironment) {
     def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
     String codeDeployGroupName = "User-Service-API-DeploymentGroup-"
     switch (awsRegion) {
         case "us-east-1":
-            codeDeployGroupName += commonLib.getRegionShortName(awsRegion)
+            codeDeployGroupName += commonLib.getRegionShortName(awsRegion) + "-$cloudEnvironment"
             return codeDeployGroupName
         case "us-east-2":
-            codeDeployGroupName += commonLib.getRegionShortName(awsRegion)
+            codeDeployGroupName += commonLib.getRegionShortName(awsRegion) + "-$cloudEnvironment"
             return codeDeployGroupName
         case "us-west-1":
-            codeDeployGroupName += commonLib.getRegionShortName(awsRegion)
+            codeDeployGroupName += commonLib.getRegionShortName(awsRegion) + "-$cloudEnvironment"
             return codeDeployGroupName
         case "ap-southeast-1":
-            codeDeployGroupName += commonLib.getRegionShortName(awsRegion)
+            codeDeployGroupName += commonLib.getRegionShortName(awsRegion) + "-$cloudEnvironment"
             return codeDeployGroupName
         default:
             return new Exception("Invalid or unsupported region $awsRegion")
     }
 }
 
-//TODO: remove later
-
-String region = "us-west-1"
-
-String getBucketName(String region) {
-    String bucketName = "core-bucket-"
-    switch (region) {
-        case "us-east-1":
-            bucketName += getRegionShortName(region)
-            return bucketName
-        case "us-east-2":
-            bucketName += getRegionShortName(region)
-            return bucketName
-        case "us-west-1":
-            bucketName += getRegionShortName(region)
-            return bucketName
-        default:
-            throw new Exception("Invalid or unsupported region $region")
-    }
-}
-
-List<String> getGroupName(String region) {
+List<String> loopThroughCodeDeployGroups(String region) {
+    def commonLib = evaluate readTrusted("Jenkins/Pipeline/common.groovy")
     List environments = ["dev", "test", "prod"]
     List<String> groups = []
+    String codeDeployGroupName = "User-Service-API-DeploymentGroup-"
+    for (env in environments) {
+        String groupName = codeDeployGroupName + commonLib.getRegionShortName(region) + "-$env"
+        println groupName
+        groups.add(groupName)
+    }
+    return groups
+}
+
+List<String> getCodeDeployGroupsNames(String region) {
+    List<String> groups
     switch (region) {
         case "us-east-1":
-            for (env in environments) {
-                String groupName = getBucketName("us-east-1") + "-$env"
-                println groupName
-                groups.add(groupName)
-            }
-            return groups
+            groups = loopThroughCodeDeployGroups(region)
+            break
+        case "us-east-2":
+            groups = loopThroughCodeDeployGroups(region)
             break
         default:
             throw new Exception("Invalid Region")
     }
+    return groups
 }
-
-List<String> groupName = getGroupName("us-east-1")
-println groupName
 
 return this

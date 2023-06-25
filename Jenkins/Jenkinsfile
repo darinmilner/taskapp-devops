@@ -213,6 +213,8 @@ pipeline {
                     if (awsRegion != "us-east-1") {
                         storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
                     }
+                    String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
+                    echo "Code Deploy groups in Jenkinsfile $groups"
                     storageLib.getAPIEnvFile(backendBucket)
                     codedeployLib.startCodeDeploy(backendBucket, awsRegion)
                 }

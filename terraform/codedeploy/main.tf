@@ -16,7 +16,7 @@ resource "aws_codedeploy_app" "user-service" {
 
 resource "aws_codedeploy_deployment_group" "user-service-deployment-group" {
   app_name              = aws_codedeploy_app.user-service.name
-  deployment_group_name = "User-Service-API-DeploymentGroup-${local.short_region}"
+  deployment_group_name = "User-Service-API-DeploymentGroup-${local.short_region}-${var.cloud-environment}"
   service_role_arn      = aws_iam_role.codedeploy-service.arn
 
   deployment_config_name = "CodeDeployDefault.OneAtATime"
