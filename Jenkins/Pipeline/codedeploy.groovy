@@ -83,7 +83,7 @@ String getLatestEnvFileName(){
         """, returnStdout: true)
     }
     def jsonSlurper = new JsonSlurper()
-    def object = jsonSlurper.parseText(latestEnvFileName.text)
+    def object = jsonSlurper.parseText(latestEnvFileName)
     println object.envfile
     return object.envfile
 }
