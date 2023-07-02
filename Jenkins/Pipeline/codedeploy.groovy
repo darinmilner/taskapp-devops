@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def startCodeDeploy(String bucket, String awsRegion, String cloudEnvironment) {
     def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
     String groupName = getCodeDeployGroup(awsRegion, cloudEnvironment)
@@ -70,6 +72,20 @@ List<String> getCodeDeployGroupsNames(String region) {
             throw new Exception("Invalid Region")
     }
     return groups
+}
+
+String getLatestEnvFileName(){
+    String latestEnvFileName = ""
+    withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
+        latestEnvFileName = sh(script: """
+            cd Jenkins/Scripts/
+            python3 get_file.py $ACCESSKEY $SECRETKEY
+        """, returnStdout: true)
+    }
+    def jsonSlurper = new JsonSlurper()
+    def object = jsonSlurper.parseText(latestEnvFileName.text)
+    println object.envfile
+    return object.envfile
 }
 
 return this

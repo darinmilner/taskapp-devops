@@ -100,6 +100,18 @@ pipeline {
             }
         }
 
+        stage("Code Deploy") {
+            when {
+                expression {
+                    return pipelineAction == "codedeploy"
+                }
+            }
+            steps {
+                script {
+                    codedeployLib.getLatestEnvFileName()
+                }
+            }
+        }
          stage("Push API to S3") {
              when {
                 expression {
