@@ -1,5 +1,3 @@
-import groovy.json.JsonSlurper
-
 def startCodeDeploy(String bucket, String awsRegion, String cloudEnvironment) {
     def storageLib = evaluate readTrusted("Jenkins/Pipeline/storage.groovy")
     String groupName = getCodeDeployGroup(awsRegion, cloudEnvironment)
@@ -83,10 +81,11 @@ String getLatestEnvFileName() {
         """, returnStdout: true)
     }
     echo "enfile location $latestEnvFileName"
-    def jsonSlurper = new JsonSlurper()
-    def object = jsonSlurper.parseText(latestEnvFileName)
-    println object.envfile
-    return object.envfile
+//    def jsonSlurper = new JsonSlurper()
+//    def object = jsonSlurper.parseText(latestEnvFileName)
+//    println object.envfile
+//    return object.envfile
+    return latestEnvFileName
 }
 
 return this
