@@ -23,23 +23,13 @@ String getLatestEnvFileName(String awsRegion) {
     String latestEnvFileName
     withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
         latestEnvFileName = sh(script: """
-            cd Jenkins/Scripts/
-            python3 get_file.py $ACCESSKEY $SECRETKEY
-        """, returnStdout: true)
-
-        try {
-            echo "Getting application file $latestEnvFileName from us-east-1 s3 bucket"
-            sh """
             #!/bin/bash
+            cd Jenkins/Scripts/
+            envFile=\$(python3 get_file.py $ACCESSKEY $SECRETKEY)
             aws configure set region us-east-1 --profile Default
-            aws s3 cp s3://taskapi-storage-bucket-useast1/${latestEnvFileName} \\
+            aws s3 cp s3://taskapi-storage-bucket-useast1/\$envFile \\
             src/resources/application-prod.yaml --profile Default
-        """
-        } catch (Exception err) {
-            def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-            echo "Pipeline is exiting $err!"
-            errorLib.throwError(err, "Error getting file from us-east-1 s3 bucket $err")
-        }
+        """, returnStdout: true)
 
         if (awsRegion != "us-east-1") {
             String region = awsRegion.replace("-", "")
