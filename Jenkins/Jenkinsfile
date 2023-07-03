@@ -110,6 +110,7 @@ pipeline {
             steps {
                 script {
                     envFilePath = storageLib.getLatestEnvFileName(awsRegion)
+                    echo "$envFilePath variable in Jenkinsfile"
                 }
             }
         }

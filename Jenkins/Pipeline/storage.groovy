@@ -31,12 +31,13 @@ String getLatestEnvFileName(String awsRegion) {
             src/resources/application-prod.yaml --profile Default
         """, returnStdout: true)
 
+        echo "enfile location $latestEnvFileName"
+
         if (awsRegion != "us-east-1") {
             String region = awsRegion.replace("-", "")
             copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, latestEnvFileName)
         }
     }
-    echo "enfile location $latestEnvFileName"
 
     return latestEnvFileName
 }
@@ -62,7 +63,9 @@ def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion, String fi
     try {
         echo "Pushing API code to $bucketName"
         sh """
+            #!/bin/bash
             aws configure set region ${awsRegion} --profile Default
+            echo ${filePath}
             aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/${filePath}  --profile Default
         """
     } catch (Exception err) {
