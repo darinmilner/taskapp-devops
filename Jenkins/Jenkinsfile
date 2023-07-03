@@ -109,12 +109,12 @@ pipeline {
             }
             steps {
                 script {
-                    envFilePath = storageLib.getLatestEnvFileName(awsRegion)
+                    envFilePath = storageLib.getLatestEnvFileName(awsRegion, backendBucket)
                     echo "$envFilePath variable in Jenkinsfile"
                 }
             }
         }
-        
+
         stage("Push API to S3") {
              when {
                 expression {

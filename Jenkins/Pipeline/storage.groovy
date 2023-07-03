@@ -19,7 +19,7 @@
 //}
 
 
-String getLatestEnvFileName(String awsRegion) {
+String getLatestEnvFileName(String awsRegion, String bucketName) {
     String latestEnvFileName
     withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
         latestEnvFileName = sh(script: """
@@ -29,14 +29,14 @@ String getLatestEnvFileName(String awsRegion) {
             aws configure set region us-east-1 --profile Default
             aws s3 cp s3://taskapi-storage-bucket-useast1/\$envFile \\
             src/resources/application-prod.yaml --profile Default
+            aws configure set region ${awsRegion} --profile Default
+            aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/\$envFile  --profile Default
         """, returnStdout: true)
 
-        echo "enfile location $latestEnvFileName"
-
-        if (awsRegion != "us-east-1") {
-            String region = awsRegion.replace("-", "")
-            copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, latestEnvFileName)
-        }
+//        if (awsRegion != "us-east-1") {
+//            String region = awsRegion.replace("-", "")
+//            copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, latestEnvFileName)
+//        }
     }
 
     return latestEnvFileName
@@ -62,10 +62,10 @@ def getAPIEnvFile(String bucketName, String filePath) {
 def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion, String filePath) {
     try {
         echo "Pushing API code to $bucketName"
+        echo filePath
+        echo awsRegion
         sh """
-            #!/bin/bash
-            echo ${filePath}
-            echo ${awsRegion}
+            #!/bin/bash 
             aws configure set region ${awsRegion} --profile Default
             aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/${filePath}  --profile Default
         """
