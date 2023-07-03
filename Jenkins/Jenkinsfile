@@ -210,7 +210,7 @@ pipeline {
         stage("Build API Environment") {
             when {
                 expression {
-                    return pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api"
+                    return pipelineAction == "deploy-api" || pipelineAction == "build-and-deploy-api" || pipelineAction == "codedeploy"
                 }
             }
 

@@ -1,6 +1,6 @@
-def getAPIEnvFileFromUSEast1Bucket(String awsRegion) {
+def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
     try {
-        echo "Getting application file from us-east-1 s3 bucket"
+        echo "Getting application file $bucketFilePath from us-east-1 s3 bucket"
         sh """
             aws configure set region us-east-1 --profile Default
             aws s3 cp s3://taskapi-storage-bucket-useast1/application-prod.yaml src/resources/application-prod.yaml --profile Default
@@ -44,7 +44,6 @@ def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
     }
 }
 
-
 def zipAndPushAPIToS3(String bucketName) {
     String versionNumber = getReleaseVersion()
     String zipFileName = "user-api-${versionNumber}"
@@ -61,7 +60,6 @@ def zipAndPushAPIToS3(String bucketName) {
         errorLib.throwError(err, "Error pushing code to S3 bucket $err")
     }
 }
-
 
 def pushTerraformPlanToS3(String bucketName, String appFolder, String changeTicket = null) {
     String versionNumber = getReleaseVersion()

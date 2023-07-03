@@ -74,14 +74,15 @@ List<String> getCodeDeployGroupsNames(String region) {
     return groups
 }
 
-String getLatestEnvFileName(){
-    String latestEnvFileName = ""
+String getLatestEnvFileName() {
+    String latestEnvFileName
     withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
         latestEnvFileName = sh(script: """
             cd Jenkins/Scripts/
             python3 get_file.py $ACCESSKEY $SECRETKEY
         """, returnStdout: true)
     }
+    echo "enfile location $latestEnvFileName"
     def jsonSlurper = new JsonSlurper()
     def object = jsonSlurper.parseText(latestEnvFileName)
     println object.envfile
