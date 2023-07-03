@@ -224,11 +224,11 @@ pipeline {
                     }
 
                     if (awsRegion != "us-east-1") {
-                        storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
+                        String filePath = storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
                     }
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
 
-                    storageLib.getAPIEnvFile(backendBucket)
+                    storageLib.getAPIEnvFile(backendBucket, filePath)
 
                     String message = "Would you like to deploy to all cloud environments?"
 

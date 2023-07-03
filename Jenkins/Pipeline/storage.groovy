@@ -1,10 +1,9 @@
 def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
-    // TODO: make bucketkey dynamic
     try {
         echo "Getting application file $bucketFilePath from us-east-1 s3 bucket"
         sh """
             aws configure set region us-east-1 --profile Default
-            aws s3 cp s3://taskapi-storage-bucket-useast1/application-prod.yaml src/resources/application-prod.yaml --profile Default
+            aws s3 cp s3://taskapi-storage-bucket-useast1/$bucketFilePath src/resources/application-prod.yaml --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -14,16 +13,19 @@ def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
 
     if (awsRegion != "us-east-1") {
         String region = awsRegion.replace("-", "")
-        // TODO: pass filePath to this function and use it to push to other buckets
-        copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion)
+        copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, bucketFilePath)
     }
 }
 
-def getAPIEnvFile(String bucketName) {
+def getAPIEnvFile(String bucketName, String filePath) {
+    if (filePath == null || filePath == "") {
+        codedeployLib = evaluate readTrusted("Jenkins/Pipeline/codedeploy.groovy")
+        filePath = codedeployLib.getLatestEnvFileName()
+    }
     try {
-        echo "Getting application file from s3 bucket $bucketName"
+        echo "Getting application file $filePath from s3 bucket $bucketName"
         sh """
-            aws s3 cp s3://${bucketName}/application-prod.yaml src/resources/application-prod.yaml --profile Default
+            aws s3 cp s3://${bucketName}/$filePath src/resources/application-prod.yaml --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
@@ -32,12 +34,12 @@ def getAPIEnvFile(String bucketName) {
     }
 }
 
-def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion) {
+def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion, String filePath) {
     try {
         echo "Pushing API code to $bucketName"
         sh """
             aws configure set region ${awsRegion} --profile Default
-            aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/application-prod.yaml  --profile Default
+            aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/${filePath}  --profile Default
         """
     } catch (Exception err) {
         def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
