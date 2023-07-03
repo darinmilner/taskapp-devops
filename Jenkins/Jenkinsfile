@@ -109,7 +109,7 @@ pipeline {
             }
             steps {
                 script {
-                    envFilePath = codedeployLib.getLatestEnvFileName()
+                    envFilePath = storageLib.getLatestEnvFileName(awsRegion)
                 }
             }
         }
@@ -224,9 +224,9 @@ pipeline {
                         }
                     }
 
-                    if (awsRegion != "us-east-1") {
-                        envFilePath = storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion, envFilePath)
-                    }
+//                     if (awsRegion != "us-east-1") {
+//                         envFilePath = storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion, envFilePath)
+//                     }
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
 
                     storageLib.getAPIEnvFile(backendBucket, filePath)

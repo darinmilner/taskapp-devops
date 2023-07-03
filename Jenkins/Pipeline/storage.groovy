@@ -1,21 +1,53 @@
-def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
-    try {
-        echo "Getting application file $bucketFilePath from us-east-1 s3 bucket"
-        sh """
+//def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
+//    try {
+//        echo "Getting application file $bucketFilePath from us-east-1 s3 bucket"
+//        sh """
+//            aws configure set region us-east-1 --profile Default
+//            aws s3 cp s3://taskapi-storage-bucket-useast1/$bucketFilePath \\
+//            src/resources/application-prod.yaml --profile Default
+//        """
+//    } catch (Exception err) {
+//        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+//        echo "Pipeline is exiting $err!"
+//        errorLib.throwError(err, "Error getting file from us-east-1 s3 bucket $err")
+//    }
+//
+//    if (awsRegion != "us-east-1") {
+//        String region = awsRegion.replace("-", "")
+//        copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, bucketFilePath)
+//    }
+//}
+
+
+String getLatestEnvFileName(String awsRegion) {
+    String latestEnvFileName
+    withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
+        latestEnvFileName = sh(script: """
+            cd Jenkins/Scripts/
+            python3 get_file.py $ACCESSKEY $SECRETKEY
+        """, returnStdout: true)
+
+        try {
+            echo "Getting application file $latestEnvFileName from us-east-1 s3 bucket"
+            sh """
             aws configure set region us-east-1 --profile Default
-            aws s3 cp s3://taskapi-storage-bucket-useast1/$bucketFilePath \\
+            aws s3 cp s3://taskapi-storage-bucket-useast1/${latestEnvFileName} \\
             src/resources/application-prod.yaml --profile Default
         """
-    } catch (Exception err) {
-        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-        echo "Pipeline is exiting $err!"
-        errorLib.throwError(err, "Error getting file from us-east-1 s3 bucket $err")
-    }
+        } catch (Exception err) {
+            def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
+            echo "Pipeline is exiting $err!"
+            errorLib.throwError(err, "Error getting file from us-east-1 s3 bucket $err")
+        }
 
-    if (awsRegion != "us-east-1") {
-        String region = awsRegion.replace("-", "")
-        copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, bucketFilePath)
+        if (awsRegion != "us-east-1") {
+            String region = awsRegion.replace("-", "")
+            copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, latestEnvFileName)
+        }
     }
+    echo "enfile location $latestEnvFileName"
+
+    return latestEnvFileName
 }
 
 def getAPIEnvFile(String bucketName, String filePath) {
