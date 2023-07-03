@@ -1,4 +1,5 @@
 def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
+    // TODO: make bucketkey dynamic
     try {
         echo "Getting application file $bucketFilePath from us-east-1 s3 bucket"
         sh """
@@ -13,6 +14,7 @@ def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
 
     if (awsRegion != "us-east-1") {
         String region = awsRegion.replace("-", "")
+        // TODO: pass filePath to this function and use it to push to other buckets
         copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion)
     }
 }
