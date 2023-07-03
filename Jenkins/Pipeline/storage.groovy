@@ -30,6 +30,7 @@ String getLatestEnvFileName(String awsRegion) {
         try {
             echo "Getting application file $latestEnvFileName from us-east-1 s3 bucket"
             sh """
+            #!/bin/bash
             aws configure set region us-east-1 --profile Default
             aws s3 cp s3://taskapi-storage-bucket-useast1/${latestEnvFileName} \\
             src/resources/application-prod.yaml --profile Default
