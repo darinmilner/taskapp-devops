@@ -17,6 +17,7 @@ String pipelineAction
 String stateTable
 String cloudEnv
 String ticket
+String envFilePath
 
 pipeline {
     agent {
@@ -108,7 +109,7 @@ pipeline {
             }
             steps {
                 script {
-                    codedeployLib.getLatestEnvFileName()
+                    envFilePath = codedeployLib.getLatestEnvFileName()
                 }
             }
         }
@@ -224,7 +225,7 @@ pipeline {
                     }
 
                     if (awsRegion != "us-east-1") {
-                        String filePath = storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion)
+                        envFilePath = storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion, envFilePath)
                     }
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
 
