@@ -54,8 +54,8 @@ def upload_envfile_to_regional_bucket(file, bucket, region, object=None):
 
 access_key = sys.argv[1]
 secret_key = sys.argv[2]
-upload_region = sys.args[3]
-upload_bucket = sys.args[4]
+upload_region = sys.argv[3]
+upload_bucket = sys.argv[4]
 
 latestfile = get_latest_envfile(access_key, secret_key)
 upload_envfile_to_regional_bucket(latestfile, upload_bucket, upload_region)
