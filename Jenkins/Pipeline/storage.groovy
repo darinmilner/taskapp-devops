@@ -1,25 +1,5 @@
-//def getAPIEnvFileFromUSEast1Bucket(String awsRegion, String bucketFilePath) {
-//    try {
-//        echo "Getting application file $bucketFilePath from us-east-1 s3 bucket"
-//        sh """
-//            aws configure set region us-east-1 --profile Default
-//            aws s3 cp s3://taskapi-storage-bucket-useast1/$bucketFilePath \\
-//            src/resources/application-prod.yaml --profile Default
-//        """
-//    } catch (Exception err) {
-//        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-//        echo "Pipeline is exiting $err!"
-//        errorLib.throwError(err, "Error getting file from us-east-1 s3 bucket $err")
-//    }
-//
-//    if (awsRegion != "us-east-1") {
-//        String region = awsRegion.replace("-", "")
-//        copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, bucketFilePath)
-//    }
-//}
-
-
 String getLatestEnvFileName(String awsRegion, String bucketName) {
+    // TODO: make function call the python script with the correct variables
     String latestEnvFileName
     withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
         latestEnvFileName = sh(script: """
@@ -42,6 +22,7 @@ String getLatestEnvFileName(String awsRegion, String bucketName) {
     return latestEnvFileName
 }
 
+//TODO: delete if python script works correctly
 def getAPIEnvFile(String bucketName, String filePath) {
     if (filePath == null || filePath == "") {
         codedeployLib = evaluate readTrusted("Jenkins/Pipeline/codedeploy.groovy")
@@ -59,6 +40,7 @@ def getAPIEnvFile(String bucketName, String filePath) {
     }
 }
 
+//TODO: make python script copy file to s3 bucket
 def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion, String filePath) {
     try {
         echo "Pushing API code to $bucketName"
