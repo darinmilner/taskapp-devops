@@ -22,6 +22,15 @@ String getLatestEnvFileName(String awsRegion, String bucketName) {
     return latestEnvFileName
 }
 
+def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
+    withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
+        sh """
+            #!/bin/bash
+            cd Jenkins/Scripts/
+            python3 get_file.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName
+        """
+    }
+}
 //TODO: delete if python script works correctly
 def getAPIEnvFile(String bucketName, String filePath) {
     if (filePath == null || filePath == "") {
