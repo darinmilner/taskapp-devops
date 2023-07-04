@@ -40,9 +40,11 @@ def download_file(access_key, secret_key, file_name):
     # TODO use boto3 s3 Object and download_file functions to download the latest file
 
 
-def upload_envfile_to_regional_bucket(file, bucket, region, object=None):
+def upload_envfile_to_regional_bucket(access_key, secret_key, file, bucket, region, object=None):
     s3_client = boto3.client("s3")
     config = Config(
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
         region_name=region
     )
     if object is None:
@@ -60,4 +62,4 @@ upload_region = sys.argv[3]
 upload_bucket = sys.argv[4]
 
 latestfile = get_latest_envfile(access_key, secret_key)
-upload_envfile_to_regional_bucket(latestfile, upload_bucket, upload_region)
+upload_envfile_to_regional_bucket(access_key, secret_key, latestfile, upload_bucket, upload_region)
