@@ -21,13 +21,13 @@ def get_latest_envfile(access_key, secret_key):
         files.sort(key=lambda x: x.last_modified)
         latest_file = files[-1].key
         print(latest_file)
-        download_file(latest_file)
+        download_file(access_key, secret_key, latest_file)
         return latest_file
     except ClientError as e:
         logging.error(e)
 
 
-def download_file(file_name):
+def download_file(access_key, secret_key, file_name):
     session = boto3.Session(
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key,
