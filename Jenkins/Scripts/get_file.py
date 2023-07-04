@@ -34,6 +34,8 @@ def download_file(access_key, secret_key, file_name):
         region_name='us-east-1'
     )
     #s3_resource = session.resource('s3', region_name='us-east-1')
+    print(file_name)
+    print(USEAST1_BUCKET_NAME)
     source_s3 = session.client('s3')
     source_s3.download_file(USEAST1_BUCKET_NAME, 'src\resources\application-prod.yml', file_name)
 
@@ -52,6 +54,8 @@ def upload_envfile_to_regional_bucket(access_key, secret_key, file, bucket, regi
     #     aws_secret_access_key=secret_key,
     #     region_name=region
     # )
+    print(file)
+    print(bucket)
     if object is None:
         object = f"envfiles/{file}"
     try:
