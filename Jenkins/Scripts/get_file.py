@@ -41,16 +41,21 @@ def download_file(access_key, secret_key, file_name):
 
 
 def upload_envfile_to_regional_bucket(access_key, secret_key, file, bucket, region, object=None):
-    s3_client = boto3.client("s3")
-    config = Config(
+    session = boto3.Session(
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key,
         region_name=region
     )
+    s3_client = session.client("s3")
+    # config = Config(
+    #     aws_access_key_id=access_key,
+    #     aws_secret_access_key=secret_key,
+    #     region_name=region
+    # )
     if object is None:
         object = f"envfiles/{file}"
     try:
-        s3_client.upload_file(file, bucket, object, Config=config)
+        s3_client.upload_file(file, bucket, object)
     except ClientError as e:
         logging.error(e)
  # TODO: use boto3 client to upload the env file to the bucket using upload_file method
