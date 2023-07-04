@@ -17,7 +17,7 @@ def get_latest_envfile(access_key, secret_key):
     # TODO: find bug and download file from useast1 bucket by calling download_file function below
     try:
         # TODO: add BucketName to Setup class
-        files = list(s3_resource.Bucket(USEAST1_BUCKET_NAME).objects.filter())
+        files = list(s3_resource.Bucket(USEAST1_BUCKET_NAME).objects.filter(Prefix="envfiles/"))
         files.sort(key=lambda x: x.last_modified)
         latest_file = files[-1].key
         print(latest_file)
@@ -58,9 +58,9 @@ def upload_envfile_to_regional_bucket(access_key, secret_key, file, bucket, regi
     print(file)
     print(bucket)
     if object is None:
-        object = file
+        object = f"envfiles/{file}"
     try:
-        s3_client.upload_file(file, bucket, object)
+        s3_client.upload_file(file, bucket, file)
     except ClientError as e:
         logging.error(e)
  # TODO: use boto3 client to upload the env file to the bucket using upload_file method
