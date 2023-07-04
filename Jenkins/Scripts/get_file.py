@@ -13,7 +13,7 @@ def get_latest_envfile(access_key, secret_key):
         aws_secret_access_key=secret_key,
     )
     s3_resource = session.resource('s3', region_name='us-east-1')
-
+    latest_file = None
     # TODO: find bug and download file from useast1 bucket by calling download_file function below
     try:
         # TODO: add BucketName to Setup class
@@ -22,10 +22,11 @@ def get_latest_envfile(access_key, secret_key):
         latest_file = files[-1].key
         print(latest_file)
         download_file(access_key, secret_key, latest_file)
-        return latest_file
+        #return latest_file
     except ClientError as e:
         logging.error(e)
-
+    print(latest_file)
+    return latest_file
 
 def download_file(access_key, secret_key, file_name):
     session = boto3.Session(
