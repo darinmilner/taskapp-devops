@@ -17,7 +17,7 @@ def get_latest_envfile(access_key, secret_key):
     # TODO: find bug and download file from useast1 bucket by calling download_file function below
     try:
         # TODO: add BucketName to Setup class
-        files = list(s3_resource.Bucket(USEAST1_BUCKET_NAME).objects.filter(Prefix="envfiles/"))
+        files = list(s3_resource.Bucket(USEAST1_BUCKET_NAME).objects.filter())
         files.sort(key=lambda x: x.last_modified)
         latest_file = files[-1].key
         print(latest_file)
