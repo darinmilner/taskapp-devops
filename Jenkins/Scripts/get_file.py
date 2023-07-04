@@ -38,7 +38,7 @@ def download_file(access_key, secret_key, file_name):
     print(file_name)
     print(USEAST1_BUCKET_NAME)
     source_s3 = session.client('s3')
-    source_s3.download_file(USEAST1_BUCKET_NAME, 'src\resources\application-prod.yml', file_name)
+    source_s3.download_file(USEAST1_BUCKET_NAME, file_name, file_name)
 
     # TODO use boto3 s3 Object and download_file functions to download the latest file
 
@@ -58,7 +58,7 @@ def upload_envfile_to_regional_bucket(access_key, secret_key, file, bucket, regi
     print(file)
     print(bucket)
     if object is None:
-        object = f"envfiles/{file}"
+        object = file
     try:
         s3_client.upload_file(file, bucket, object)
     except ClientError as e:
