@@ -31,9 +31,11 @@ def download_file(file_name):
     session = boto3.Session(
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_key,
+        region_name='us-east-1'
     )
-    s3_resource = session.resource('s3', region_name='us-east-1')
-    s3_resource.download_file(USEAST1_BUCKET_NAME, 'src\resources\application-prod.yml', file_name)
+    #s3_resource = session.resource('s3', region_name='us-east-1')
+    source_s3 = session.client('s3')
+    source_s3.download_file(USEAST1_BUCKET_NAME, 'src\resources\application-prod.yml', file_name)
 
     # TODO use boto3 s3 Object and download_file functions to download the latest file
 
