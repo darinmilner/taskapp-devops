@@ -29,42 +29,9 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
             cd Jenkins/Scripts/
             mkdir -p envfiles/
             python3 get_file.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName
+            cd Jenkins/Scripts
+            ls -la
         """
-    }
-}
-//TODO: delete if python script works correctly
-def getAPIEnvFile(String bucketName, String filePath) {
-    if (filePath == null || filePath == "") {
-        codedeployLib = evaluate readTrusted("Jenkins/Pipeline/codedeploy.groovy")
-        filePath = codedeployLib.getLatestEnvFileName()
-    }
-    try {
-        echo "Getting application file $filePath from s3 bucket $bucketName"
-        sh """
-            aws s3 cp s3://${bucketName}/$filePath src/resources/application-prod.yaml --profile Default
-        """
-    } catch (Exception err) {
-        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-        echo "Pipeline is exiting $err!"
-        errorLib.throwError(err, "Error getting file from s3 bucket $err")
-    }
-}
-
-//TODO: make python script copy file to s3 bucket
-def copyEnvFileToRegionalS3Bucket(String bucketName, String awsRegion, String filePath) {
-    try {
-        echo "Pushing API code to $bucketName"
-        echo filePath
-        echo awsRegion
-        sh """
-            #!/bin/bash 
-            aws configure set region ${awsRegion} --profile Default
-            aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/${filePath}  --profile Default
-        """
-    } catch (Exception err) {
-        def errorLib = evaluate readTrusted("Jenkins/Pipeline/errors.groovy")
-        echo "Pipeline is exiting! $err"
-        errorLib.throwError(err, "Error pushing code to S3 bucket $err")
     }
 }
 

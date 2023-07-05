@@ -109,8 +109,6 @@ pipeline {
             }
             steps {
                 script {
-//                     envFilePath = storageLib.getLatestEnvFileName(awsRegion, backendBucket)
-//                     echo "$envFilePath variable in Jenkinsfile"
                        storageLib.getAndUploadLatestEnvFileToS3(awsRegion, backendBucket)
                 }
             }
