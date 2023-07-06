@@ -234,9 +234,9 @@ pipeline {
 
                     String message = "Would you like to deploy to all cloud environments?"
 
-                    def input = inputLib.getInput(message, "Deploy to All Regions", message, ["yes", "no"])
+                    boolean allRegions = inputLib.getInput(message, "Deploy to All Regions?")
 
-                    if (input == "yes") {
+                    if (allRegions) {
                         echo "Input to all regions"
                         codedeployLib.deployToAllEnvironments(awsRegion)
                     }else {
