@@ -31,7 +31,9 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
             file=\$(python3 main.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName)
             ls -la
             cat \$file
-            mv \$file ../../src/resources/\$file
+            cd envfiles/
+            ls -la
+            #mv \$file ../../src/resources/\$file
         """
     }
 }
