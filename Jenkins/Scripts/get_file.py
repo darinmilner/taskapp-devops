@@ -2,7 +2,7 @@ import boto3
 import logging
 from botocore.exceptions import ClientError
 
-USEAST1_BUCKET_NAME = "taskapi-storage-useast1"
+USEAST1_BUCKET_NAME = "taskapi-storage-bucket-useast1"
 
 
 def get_latest_envfile(s3setup):
