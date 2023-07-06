@@ -230,9 +230,7 @@ pipeline {
 //                     }
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
 
-                    String message = "Would you like to deploy to all cloud environments?"
-
-                    boolean allRegions = inputLib.getInput(message, "Deploy to All Regions?")
+                    boolean allRegions = inputLib.getInput("DEPLOY_ALL", "Deploy to All Regions?")
 
                     if (allRegions) {
                         echo "Input to all regions"

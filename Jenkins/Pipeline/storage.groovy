@@ -1,27 +1,3 @@
-//String getLatestEnvFileName(String awsRegion, String bucketName) {
-//    // TODO: make function call the python script with the correct variables
-//    String latestEnvFileName
-//    withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
-//        latestEnvFileName = sh(script: """
-//            #!/bin/bash
-//            cd Jenkins/Scripts/
-//            envFile=\$(python3 get_file.py $ACCESSKEY $SECRETKEY)
-//            aws configure set region us-east-1 --profile Default
-//            aws s3 cp s3://taskapi-storage-bucket-useast1/\$envFile \\
-//            src/resources/application-prod.yaml --profile Default
-//            aws configure set region ${awsRegion} --profile Default
-//            aws s3 cp src/resources/application-prod.yaml s3://${bucketName}/\$envFile  --profile Default
-//        """, returnStdout: true)
-//
-////        if (awsRegion != "us-east-1") {
-////            String region = awsRegion.replace("-", "")
-////            copyEnvFileToRegionalS3Bucket("taskapi-storage-bucket-${region}", awsRegion, latestEnvFileName)
-////        }
-//    }
-//
-//    return latestEnvFileName
-//}
-
 def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
     withCredentials([usernamePassword(credentialsId: "amazon", usernameVariable: "ACCESSKEY", passwordVariable: "SECRETKEY")]) {
         sh """
@@ -29,8 +5,6 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
             cd Jenkins/Scripts/
             mkdir -p envfiles/
             file=\$(python3 main.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName)
-            ls -la
-            echo \$file
             #mv \$file ../../src/resources/\$file
         """
     }
