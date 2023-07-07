@@ -225,9 +225,6 @@ pipeline {
                         }
                     }
 
-//                     if (awsRegion != "us-east-1") {
-//                         envFilePath = storageLib.getAPIEnvFileFromUSEast1Bucket(awsRegion, envFilePath)
-//                     }
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
 
                     boolean allRegions = inputLib.getInput("DEPLOY_ALL", "Deploy to All Regions?")
