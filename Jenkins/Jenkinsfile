@@ -229,7 +229,7 @@ pipeline {
 
                     def input = inputLib.getInput("DEPLOY_ALL", "Deploy to All Regions?")
                     echo input
-                    if (input = "ALL_REGIONS") {
+                    if (input == "ALL_REGIONS") {
                         echo "Input to all regions"
                         codedeployLib.deployToAllEnvironments(awsRegion)
                     }else {
