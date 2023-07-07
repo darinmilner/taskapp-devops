@@ -227,8 +227,8 @@ pipeline {
 
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
 
-                    boolean allRegions = inputLib.getInput("DEPLOY_ALL", "Deploy to All Regions?")
-
+                    def allRegions = inputLib.getInput("DEPLOY_ALL", "Deploy to All Regions?")
+                    echo allRegions
                     if (allRegions) {
                         echo "Input to all regions"
                         codedeployLib.deployToAllEnvironments(awsRegion)

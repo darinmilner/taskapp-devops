@@ -40,7 +40,10 @@ def upload_envfile_to_regional_bucket(setup, file, object=None):
     )
 
     print(f"file: {file}")
-
+    file_parts = file.split("/")
+    print(f"file parts {file_parts}")
+    envfile_to_upload = file_parts[1]
+    print(f"file to upload {envfile_to_upload}")
     s3_client = session.client("s3")
     if object is None:
         object = f"{setup.envfile_region}{file}"

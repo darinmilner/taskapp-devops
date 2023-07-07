@@ -6,6 +6,7 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
             mkdir -p envfiles/
             file=\$(python3 main.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName)
             echo \$file
+            cd envfiles/
             ls -la
             #mv -f \$file ./../../src/resources/application-prod.yaml
         """
