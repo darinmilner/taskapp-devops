@@ -32,7 +32,7 @@ def download_file(s3setup, file_name):
     source_s3.download_file(USEAST1_BUCKET_NAME, file_name, file_name)
 
 
-def upload_envfile_to_regional_bucket(setup, file, object=None):
+def upload_envfile_to_regional_bucket(setup, file):  # object=None):
     session = boto3.Session(
         aws_access_key_id=setup.access_key,
         aws_secret_access_key=setup.secret_key,
@@ -44,9 +44,11 @@ def upload_envfile_to_regional_bucket(setup, file, object=None):
     print(f"file parts {file_parts}")
     envfile_to_upload = file_parts[1]
     print(f"file to upload {envfile_to_upload}")
+    latest_envfile = f"{file_parts[0]}/application-prod.yaml"
+    print(f"Upload file object path {latest_envfile}")
     s3_client = session.client("s3")
-    if object is None:
-        object = f"{setup.envfile_region}{file}"
+    # if object is None:
+    #     object = f"{setup.envfile_region}{file}"
     try:
         s3_client.upload_file(file, setup.bucket, file)
     except ClientError as e:
