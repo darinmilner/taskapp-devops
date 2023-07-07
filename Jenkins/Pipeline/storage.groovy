@@ -5,10 +5,6 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
             cd Jenkins/Scripts/
             mkdir -p envfiles/
             file=\$(python3 main.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName)
-            echo \$file
-            cd envfiles/
-            ls -la
-            #mv -f \$file ./../../src/resources/application-prod.yaml
         """
     }
 }
@@ -59,6 +55,16 @@ String getReleaseVersion() {
 
     println "Version number is $versionNumber"
     return versionNumber
+}
+
+def getLatestEnvFile(String bucket) {
+    try {
+        sh """
+            aws s3 cp s3://$bucket/envfiles/application-prod.yaml src/resources/application-prod.yaml 
+        """
+    } catch (Exception err) {
+        throw new Exception("Error copying latest envfile $err")
+    }
 }
 
 return this

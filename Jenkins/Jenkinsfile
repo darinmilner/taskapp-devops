@@ -122,6 +122,7 @@ pipeline {
             }
             steps {
                 script {
+                    storageLib.getLatestEnvFile(backendBucket)
                     storageLib.zipAndPushAPIToS3(backendBucket)
                 }
             }
