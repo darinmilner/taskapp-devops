@@ -5,7 +5,9 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
             cd Jenkins/Scripts/
             mkdir -p envfiles/
             file=\$(python3 main.py $ACCESSKEY $SECRETKEY $awsRegion $bucketName)
-            mv -f \$file ./../../src/resources/application-prod.yaml
+            echo \$file
+            ls -la
+            #mv -f \$file ./../../src/resources/application-prod.yaml
         """
     }
 }
