@@ -38,6 +38,9 @@ def upload_envfile_to_regional_bucket(setup, file, object=None):
         aws_secret_access_key=setup.secret_key,
         region_name=setup.region
     )
+
+    print(f"file: {file}")
+
     s3_client = session.client("s3")
     if object is None:
         object = f"{setup.envfile_region}{file}"
