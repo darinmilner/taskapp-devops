@@ -29,7 +29,9 @@ def download_file(s3setup, file_name):
         region_name=s3setup.envfile_region
     )
     source_s3 = session.client('s3')
-    source_s3.download_file(USEAST1_BUCKET_NAME, file_name, file_name)
+    downloaded_file = "application-prod.yaml"
+    # file_name is file to download  downloaded file is name after downloading
+    source_s3.download_file(USEAST1_BUCKET_NAME, file_name, downloaded_file)
 
 
 def upload_envfile_to_regional_bucket(setup, file):  # object=None):
@@ -46,6 +48,7 @@ def upload_envfile_to_regional_bucket(setup, file):  # object=None):
     s3_client = session.client("s3")
     # if object is None:
     #     object = f"{setup.envfile_region}{file}"
+    file = "application-prod.yaml"
     try:
         s3_client.upload_file(file, setup.bucket, latest_envfile)
     except ClientError as e:
