@@ -60,7 +60,7 @@ String getReleaseVersion() {
 def getLatestEnvFile(String bucket) {
     try {
         sh """
-            aws s3 cp s3://$bucket/envfiles/application-prod.yaml src/resources/application-prod.yaml 
+            aws s3 cp s3://$bucket/envfiles/application-prod.yaml src/resources/application-prod.yaml --profile Default
         """
     } catch (Exception err) {
         throw new Exception("Error copying latest envfile $err")

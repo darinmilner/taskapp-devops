@@ -40,7 +40,8 @@ def upload_envfile_to_regional_bucket(setup, file):  # object=None):
     )
 
     file_parts = file.split("/")
-    latest_envfile = f"{file_parts[0]}/application-prod.yaml"
+    # latest_envfile = f"{file_parts[0]}/application-prod.yaml"
+    latest_envfile = f"envfiles/application-prod.yaml"
     print(f"Upload file object path {latest_envfile}\n")
     s3_client = session.client("s3")
     # if object is None:
