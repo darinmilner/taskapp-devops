@@ -30,6 +30,7 @@ def download_file(s3setup, file_name):
     )
     source_s3 = session.client('s3')
     downloaded_file = "application-prod.yaml"
+    print(downloaded_file)
     # file_name is file to download  downloaded file is name after downloading
     source_s3.download_file(USEAST1_BUCKET_NAME, file_name, downloaded_file)
 
