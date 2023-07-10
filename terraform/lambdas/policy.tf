@@ -25,6 +25,26 @@ resource "aws_iam_policy" "api-lambda-policy" {
                 "sns:RemovePermission"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "putObject",
+            "Effect" : "Allow",
+            "Action" : [
+                "s3:PutObject"
+            ],
+            "Resource": [
+                ${aws_s3_bucket.storagebucket.arn}
+            ]
+        },
+        {
+            "Sid": "getObject",
+            "Effect" : "Allow",
+            "Action" : [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                ${aws_s3_bucket.storagebucket.arn}
+            ]
         }
     ]
 }

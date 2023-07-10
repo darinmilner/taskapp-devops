@@ -10,14 +10,13 @@ def getAndUploadLatestEnvFileToS3(String awsRegion, String bucketName) {
     }
 }
 
-def zipAndPushAPIToS3(String bucketName) {
+String zipAndPushAPIToS3(String bucketName) {
     String versionNumber = getReleaseVersion()
     String zipFileName = "user-api-${versionNumber}"
     try {
         echo "Pushing API code to $bucketName"
         sh """
             zip -r ${zipFileName}.zip src/
-            ls -la
             aws s3 cp ${WORKSPACE}/${zipFileName}.zip s3://${bucketName}/api/${versionNumber}/  --profile Default
         """
     } catch (Exception err) {
@@ -25,6 +24,8 @@ def zipAndPushAPIToS3(String bucketName) {
         echo "Pipeline is exiting! $err"
         errorLib.throwError(err, "Error pushing code to S3 bucket $err")
     }
+
+    return "/api/${versionNumber}/${zipFileName}"
 }
 
 def pushTerraformPlanToS3(String bucketName, String appFolder, String changeTicket = null) {

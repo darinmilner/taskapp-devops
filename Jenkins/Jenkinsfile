@@ -29,6 +29,7 @@ pipeline {
     environment {
         String BUCKET_PREFIX = "taskapi-storage-bucket-"
         String DYNAMO_TABLE_PREFIX = "state-lock-table-"
+        String GET_API_LAMBDA = "get-api-code"
     }
 
     parameters {
@@ -123,7 +124,7 @@ pipeline {
             steps {
                 script {
                     storageLib.getLatestEnvFile(backendBucket)
-                    storageLib.zipAndPushAPIToS3(backendBucket)
+                    String latestAPICode = storageLib.zipAndPushAPIToS3(backendBucket)
                 }
             }
         }
@@ -227,6 +228,7 @@ pipeline {
                     }
 
                     String groups = codedeployLib.getCodeDeployGroupsNames(awsRegion)
+                    lambdasLib.invokeGetAPICodeLambda(awsRegion, env.GET_API_LAMBDA, backendBucket, latestAPICode)
 
                     def input = inputLib.getInput("DEPLOY_ALL", "Deploy to All Regions?")
                     echo input
