@@ -16,7 +16,7 @@ USEAST1_BUCKET = "bucket-name-goes-here"
 def lambda_handler(event, context):
     logger.info(f"Uploading API file from useast1 bucket {event}")
 
-    json_obj = json.dumps(event)
+    json_obj = json.loads(event)
     upload_bucket = json_obj["uploadBucket"]
     upload_region = json_obj["uploadRegion"]
     latest_file_folder = ""  # TODO: get values from json
@@ -49,7 +49,7 @@ def download_file(s3setup, file_name):
     session = boto3.Session(
         aws_access_key_id=s3setup.access_key,
         aws_secret_access_key=s3setup.secret_key,
-        region_name=s3setup.envfile_region
+        region_name=s3setup.apifile_region
     )
     source_s3 = session.client('s3')
     downloaded_file = "latest-api.zip"
@@ -69,7 +69,7 @@ def upload_apifile_to_regional_bucket(setup, file):  # object=None):
     logger.info(f"Upload file object path {latest_apifile}\n")
     s3_client = session.client("s3")
 
-    file = "application-prod.yaml"
+    file = "latest-api.zip"
     try:
         s3_client.upload_file(file, setup.bucket, latest_apifile)
     except ClientError as e:
