@@ -17,7 +17,7 @@ def invokeGetAPICodeLambda(String region, String functionName, String bucket, St
         sh """
         aws configure set region $region
         aws lambda invoke --function-name $functionName  \\
-            --payload '{
+           --cli-binary-format raw-in-base64-out --payload '{
                 "uploadRegion" : $region,
                 "uploadBucket" : $bucket,
                 "latestFolder" : $latestFolder
