@@ -15,7 +15,7 @@ def buildLambdaEnvironment() {
 def invokeGetAPICodeLambda(String region, String functionName, String bucket, String latestFolder) {
     try {
         sh """
-        aws configure region $region
+        aws configure set region $region
         aws lambda invoke --function-name $functionName  \\
             --payload '{
                 "uploadRegion" : $region,
