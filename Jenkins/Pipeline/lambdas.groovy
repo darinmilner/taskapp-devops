@@ -13,15 +13,21 @@ def buildLambdaEnvironment() {
 }
 
 def invokeGetAPICodeLambda(String region, String functionName, String bucket, String latestFolder) {
-    // TODO: put in try catch block
-    sh """
-        aws lambda invoke --function-name $functionName --cli-binary-format raw-in-base64-out \\
+    try {
+        sh """
+        aws configure region $region
+        aws lambda invoke --function-name $functionName  \\
             --payload '{
                 "uploadRegion" : $region,
                 "uploadBucket" : $bucket,
                 "latestFolder" : $latestFolder
-            }'
-    """
+            }' format.json  --profile Default
+        """
+    } catch (Exception err) {
+        echo "An error occured invoking lambda $functionName"
+        throw err
+    }
+
 }
 
 return this

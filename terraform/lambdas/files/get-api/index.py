@@ -16,10 +16,9 @@ USEAST1_BUCKET = "bucket-name-goes-here"
 def lambda_handler(event, context):
     logger.info(f"Uploading API file from useast1 bucket {event}")
 
-    json_obj = json.loads(event)
-    upload_bucket = json_obj["uploadBucket"]
-    upload_region = json_obj["uploadRegion"]
-    latest_file_folder = ""  # TODO: get values from json
+    upload_bucket = event["uploadBucket"]
+    upload_region = event["uploadRegion"]
+    latest_file_folder = event["latestFolder"]
 
     s3setup = Setup(upload_region, upload_bucket, access_key, secret_key, latest_file_folder)
     s3latestfile = get_latest_apifile(s3setup)

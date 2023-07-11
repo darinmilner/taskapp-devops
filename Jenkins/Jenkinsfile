@@ -10,6 +10,7 @@ def changeTicketLib = evaluate readTrusted("Jenkins/Pipeline/changeTicket.groovy
 def codedeployLib = evaluate readTrusted("Jenkins/Pipeline/codedeploy.groovy")
 def inputLib = evaluate readTrusted("Jenkins/Pipeline/input.groovy")
 
+String latestAPICode
 String appFolder
 String backendBucket
 String awsRegion
@@ -124,7 +125,7 @@ pipeline {
             steps {
                 script {
                     storageLib.getLatestEnvFile(backendBucket)
-                    String latestAPICode = storageLib.zipAndPushAPIToS3(backendBucket)
+                    latestAPICode = storageLib.zipAndPushAPIToS3(backendBucket)
                 }
             }
         }
