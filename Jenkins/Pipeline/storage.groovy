@@ -25,7 +25,9 @@ String zipAndPushAPIToS3(String bucketName) {
         errorLib.throwError(err, "Error pushing code to S3 bucket $err")
     }
 
-    return "/api/${versionNumber}/${zipFileName}"
+    String folder = "/api/${versionNumber}/${zipFileName}"
+    echo folder
+    return folder
 }
 
 def pushTerraformPlanToS3(String bucketName, String appFolder, String changeTicket = null) {
