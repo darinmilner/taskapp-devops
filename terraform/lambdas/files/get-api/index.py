@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 access_key = os.environ.get("AWS_ACCESS_KEY")
 secret_key = os.environ.get("AWS_SECRET_KEY")
 
-USEAST1_BUCKET = "bucket-name-goes-here"
+USEAST1_BUCKET = "taskapi-storage-bucket-useast1"
 
 
 def lambda_handler(event, context):

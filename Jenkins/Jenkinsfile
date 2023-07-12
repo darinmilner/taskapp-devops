@@ -30,7 +30,7 @@ pipeline {
     environment {
         String BUCKET_PREFIX = "taskapi-storage-bucket-"
         String DYNAMO_TABLE_PREFIX = "state-lock-table-"
-        String GET_API_LAMBDA = "get-api-code"
+        String GET_API_LAMBDA = "TestDownloadAPI"
     }
 
     parameters {
