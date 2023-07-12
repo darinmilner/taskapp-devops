@@ -2,7 +2,7 @@ import boto3
 import logging
 from botocore.exceptions import ClientError
 
-# TODO import setup class
+from setup import Setup
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -23,7 +23,7 @@ def lambda_handler(event, context):
     s3setup = Setup(upload_region, upload_bucket, access_key, secret_key, latest_file_folder)
     s3latestfile = get_latest_apifile(s3setup)
 
-    if upload_region != s3setup.envfile_region:
+    if upload_region != s3setup.apifile_region:
         upload_apifile_to_regional_bucket(s3setup, s3latestfile)
 
 
@@ -57,7 +57,7 @@ def download_file(s3setup, file_name):
     source_s3.download_file(USEAST1_BUCKET, file_name, downloaded_file)
 
 
-def upload_apifile_to_regional_bucket(setup, file):  # object=None):
+def upload_apifile_to_regional_bucket(setup, file):
     session = boto3.Session(
         aws_access_key_id=setup.access_key,
         aws_secret_access_key=setup.secret_key,
